@@ -1,0 +1,33 @@
+lector de luz: avisos de intensidad, historicos.
+lector de temperatura: calcular temperatura(alarma), historicos.
+motor: abrir puerta, 
+pantalla: 
+luz: color en función de la intensidad de la luz, 
+altavoz: alarma de eclosión. 
+
+
+APLICACIÓN ORDENADOR: 
+- Registros. 
+
+
+APLICACIÓN MÓVIL:
+- Login (Nombre y dni). 
+- Lector de niveles de la noche.(Grafica y mensajes).
+- Menú stack con los diferentes opciones (Luz, Temperatura, Puerta);
+
+=Luz= (Control de errores)
+- Niveles actuales: Muestra un numero con el nivel de la luz. 
+- Niveles de las ultimas 24 horas: metes una hora y te saca la potencia de la luz en ese especifico momento. 
+- Controlar la intensidad de luz (Con advertencias de peligro): Dos botones (uno arriba y otro abajo) con los cuales al pulsar regules el numero de la intensidad. 
+- Apagar o encender: Un icono que al pulsarlo se altere entre brillante y apagado. 
+
+=Temperatura= (Control de errores) <= Lo mismo que en Luz
+- Niveles actuales. 
+- Niveles de las últimas 24 horas. 
+- Controlas la temperatura (Con advertenicas de peligro). 
+
+=Puerta= (Control de errores)
+- Comprobar el estado de la puerta. <= label con icono de una puerta abierta/cerrada
+- Abrir/Cerrarla: Boton que cambie el estado de la puerta de cerrada a abierta y viceversa
+- Girar el Huevo (O giro do Ovo): Boton que al pulsarlo, el huevo girara en su posicion actual +90cº
+
