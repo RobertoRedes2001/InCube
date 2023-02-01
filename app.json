@@ -1,12 +1,7 @@
 {
   "expo": {
-<<<<<<< HEAD
     "name": "pi_amarillo",
     "slug": "snack-c33d1cfd-a61c-4a93-9287-e32a29482256",
-=======
-    "name": "proyecto-integrado",
-    "slug": "snack-7ed4d993-1d35-40ca-ad0e-240bfaf40794",
->>>>>>> 7aa069f246b895b46babab3b9a61090c3e9ab5c3
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

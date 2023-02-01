@@ -42,11 +42,7 @@ export default function Login({ navigation }) {
   };
 
   return (
-<<<<<<< HEAD
     <View style={styles.layout}>
-=======
-    <ScrollView style={styles.layout}>
->>>>>>> 7aa069f246b895b46babab3b9a61090c3e9ab5c3
      <View style={{ height: 20 }} />
       <View
         style={{
@@ -100,11 +96,7 @@ export default function Login({ navigation }) {
           style={styles.button}
           alignSelf="center"
           mode="contained"
-<<<<<<< HEAD
           color="orange"
-=======
-          color="#F8B52C"
->>>>>>> 7aa069f246b895b46babab3b9a61090c3e9ab5c3
           dark={true}
           onPress={() => {
             login();
@@ -114,11 +106,7 @@ export default function Login({ navigation }) {
           </Text>
         </Button>
       </View>
-<<<<<<< HEAD
     </View>
-=======
-    </ScrollView>
->>>>>>> 7aa069f246b895b46babab3b9a61090c3e9ab5c3
   );
 }
 
@@ -139,11 +127,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 30,
     borderTopLeftRadius: 30,
     borderWidth: 3,
-<<<<<<< HEAD
     borderColor: 'orange',
-=======
-    borderColor: '#F8B52C',
->>>>>>> 7aa069f246b895b46babab3b9a61090c3e9ab5c3
     height: 57,
     overflow: 'hidden',
     marginBottom: 20,
@@ -171,89 +155,6 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'rgba(248,181,44,1)',
     elevation: 10,
-<<<<<<< HEAD
-  },
-  fullcircle0: {
-    backgroundColor: 'rgba(248,181,44,0.45)',
-    borderRadius: 305 / 2,
-    borderColor: 'white',
-    height: 305,
-    width: 305,
-    position: 'absolute',
-  },
-  fullcircle: {
-    backgroundColor: 'rgba(248,181,44,0.4)',
-    borderRadius: 310 / 2,
-    borderColor: 'white',
-    height: 310,
-    width: 310,
-    position: 'absolute',
-  },
-  fullcircle05: {
-    backgroundColor: 'rgba(248,181,44,0.35)',
-    borderRadius: 315 / 2,
-    borderColor: 'white',
-    height: 315,
-    width: 315,
-    position: 'absolute',
-  },
-  fullcircle1: {
-    backgroundColor: 'rgba(248,181,44,0.3)',
-    borderRadius: 320 / 2,
-    borderColor: 'white',
-    height: 320,
-    width: 320,
-    position: 'absolute',
-  },
-  fullcircle15: {
-    backgroundColor: 'rgba(248,181,44,0.25)',
-    borderRadius: 325 / 2,
-    borderColor: 'white',
-    height: 325,
-    width: 325,
-    position: 'absolute',
-  },
-  fullcircle2: {
-    backgroundColor: 'rgba(248,181,44,0.2)',
-    borderRadius: 330 / 2,
-    borderColor: 'white',
-    height: 330,
-    width: 330,
-    position: 'absolute',
-  },
-  fullcircle25: {
-    backgroundColor: 'rgba(248,181,44,0.15)',
-    borderRadius: 335 / 2,
-    borderColor: 'white',
-    height: 335,
-    width: 335,
-    position: 'absolute',
-  },
-  fullcircle3: {
-    backgroundColor: 'rgba(248,181,44,0.1)',
-    borderRadius: 340 / 2,
-    borderColor: 'white',
-    height: 340,
-    width: 340,
-    position: 'absolute',
-  },
-  fullcircle35: {
-    backgroundColor: 'rgba(248,181,44,0.05)',
-    borderRadius: 345 / 2,
-    borderColor: 'white',
-    height: 345,
-    width: 345,
-    position: 'absolute',
-  },
-  fullcircle40: {
-    backgroundColor: 'rgba(248,181,44,0.01)',
-    borderRadius: 350 / 2,
-    borderColor: 'white',
-    height: 350,
-    width: 350,
-    position: 'absolute',
-=======
->>>>>>> 7aa069f246b895b46babab3b9a61090c3e9ab5c3
   },
   fullcircle0: {
     backgroundColor: 'rgba(248,181,44,0.45)',
