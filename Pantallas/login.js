@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { TextInput, Button } from 'react-native-paper';
-import { StyleSheet, View, Text, Image, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, Alert } from 'react-native';
 import { useContext, useState } from 'react';
 import PantallasContext from './PantallasContext';
 
@@ -42,13 +42,35 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <ScrollView style={styles.layout}>
-      <Image style={styles.image} source={logo} />
-      <Text style={styles.titulo}>InCube</Text>
-      <TextInput
+    <View style={styles.layout}>
+     <View style={{ height: 20 }} />
+      <View
+        style={{
+          marginBottom: 40,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <View style={styles.fullcircle0} />
+        <View style={styles.fullcircle} />
+        <View style={styles.fullcircle05} />
+        <View style={styles.fullcircle1} />
+        <View style={styles.fullcircle15} />
+        <View style={styles.fullcircle2} />
+        <View style={styles.fullcircle25} />
+        <View style={styles.fullcircle3} />
+        <View style={styles.fullcircle35} />
+        <View style={styles.fullcircle40} />
+        <Image style={styles.image} source={logo} />
+      </View>
+      <View>
+        <View style={{ height: 10 }} />
+        <Text style={styles.titulo}>InCube</Text>
+        <View style={{ height: 10 }} />
+         <TextInput
         style={styles.width}
         onChangeText={(newText) => setUser(newText)}
-        left={<TextInput.Icon icon="account" />}
+        left={<TextInput.Icon icon="account" color="#F8B52C" />}
         maxLength={20}
         defaultValue={user}
         underlineColor={'transparent'}
@@ -59,8 +81,8 @@ export default function Login({ navigation }) {
       <TextInput
         style={styles.width}
         onChangeText={(newText) => setPass(newText)}
-        left={<TextInput.Icon icon="lock" />}
-        right={<TextInput.Icon icon={eye} onPress={changeVisible} />}
+        left={<TextInput.Icon icon="lock" color="#F8B52C" />}
+        right={<TextInput.Icon icon={eye} onPress={changeVisible} color="#F8B52C"  />}
         secureTextEntry={visible}
         maxLength={20}
         value={pass}
@@ -69,17 +91,22 @@ export default function Login({ navigation }) {
         label="Password..."
         placeholder="Write your password..."
       />
-      <Button
-        style={styles.button}
-        alignSelf="center"
-        mode="contained"
-        color="#dba534"
-        onPress={() => {
-          login();
-        }}>
-        Entrar
-      </Button>
-    </ScrollView>
+        <View style={{ height: 20 }} />
+        <Button
+          style={styles.button}
+          alignSelf="center"
+          mode="contained"
+          color="orange"
+          dark={true}
+          onPress={() => {
+            login();
+          }}>
+          <Text style={{ fontFamily: 'Century Gothic', fontWeight: 'bold' }}>
+            Entrar
+          </Text>
+        </Button>
+      </View>
+    </View>
   );
 }
 
@@ -87,8 +114,9 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     justifyContent: 'center',
+    flexDirection: 'column',
     padding: 8,
-    backgroundColor: '#3c525b',
+    backgroundColor: '#344955',
     textAlign: 'center',
   },
   width: {
@@ -98,26 +126,25 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderTopEndRadius: 30,
     borderTopLeftRadius: 30,
-    borderWidth: 2,
-    borderColor: 'black',
+    borderWidth: 3,
+    borderColor: 'orange',
     height: 57,
     overflow: 'hidden',
-    backgroundColor: '#fff',
     marginBottom: 20,
   },
   button: {
     borderRadius: 30,
     borderTopEndRadius: 30,
     borderTopLeftRadius: 30,
-    borderWidth: 2,
-    borderColor: 'black',
+    borderWidth: 3,
+    borderColor: 'white',
   },
   titulo: {
     textAlign: 'center',
-    fontSize: 30,
+    fontSize: 50,
     fontWeight: 'bold',
     color: 'white',
-    fontFamily: 'Candara',
+    fontFamily: 'Century Gothic',
     marginBottom: 20,
   },
   image: {
@@ -125,7 +152,88 @@ const styles = StyleSheet.create({
     height: 300,
     alignSelf: 'center',
     borderRadius: 200,
-    borderWidth: 2,
-    borderColor: 'black',
+    borderWidth: 3,
+    borderColor: 'rgba(248,181,44,1)',
+    elevation: 10,
+  },
+  fullcircle0: {
+    backgroundColor: 'rgba(248,181,44,0.45)',
+    borderRadius: 305 / 2,
+    borderColor: 'white',
+    height: 305,
+    width: 305,
+    position: 'absolute',
+  },
+  fullcircle: {
+    backgroundColor: 'rgba(248,181,44,0.4)',
+    borderRadius: 310 / 2,
+    borderColor: 'white',
+    height: 310,
+    width: 310,
+    position: 'absolute',
+  },
+  fullcircle05: {
+    backgroundColor: 'rgba(248,181,44,0.35)',
+    borderRadius: 315 / 2,
+    borderColor: 'white',
+    height: 315,
+    width: 315,
+    position: 'absolute',
+  },
+  fullcircle1: {
+    backgroundColor: 'rgba(248,181,44,0.3)',
+    borderRadius: 320 / 2,
+    borderColor: 'white',
+    height: 320,
+    width: 320,
+    position: 'absolute',
+  },
+  fullcircle15: {
+    backgroundColor: 'rgba(248,181,44,0.25)',
+    borderRadius: 325 / 2,
+    borderColor: 'white',
+    height: 325,
+    width: 325,
+    position: 'absolute',
+  },
+  fullcircle2: {
+    backgroundColor: 'rgba(248,181,44,0.2)',
+    borderRadius: 330 / 2,
+    borderColor: 'white',
+    height: 330,
+    width: 330,
+    position: 'absolute',
+  },
+  fullcircle25: {
+    backgroundColor: 'rgba(248,181,44,0.15)',
+    borderRadius: 335 / 2,
+    borderColor: 'white',
+    height: 335,
+    width: 335,
+    position: 'absolute',
+  },
+  fullcircle3: {
+    backgroundColor: 'rgba(248,181,44,0.1)',
+    borderRadius: 340 / 2,
+    borderColor: 'white',
+    height: 340,
+    width: 340,
+    position: 'absolute',
+  },
+  fullcircle35: {
+    backgroundColor: 'rgba(248,181,44,0.05)',
+    borderRadius: 345 / 2,
+    borderColor: 'white',
+    height: 345,
+    width: 345,
+    position: 'absolute',
+  },
+  fullcircle40: {
+    backgroundColor: 'rgba(248,181,44,0.01)',
+    borderRadius: 350 / 2,
+    borderColor: 'white',
+    height: 350,
+    width: 350,
+    position: 'absolute',
   },
 });

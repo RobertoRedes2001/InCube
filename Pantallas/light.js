@@ -9,10 +9,12 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Light(props) {
-  const max = 35;
-  const [barra, setBarra] = React.useState(0);
+  const max = 9;
+  const [consultarLuz, setConsultarLuz] = React.useState(0);
   const [modo, setModo] = React.useState('Off');
-  const [color, setColor] = React.useState('grey')
+  const [colorBulb, setColorBulb] = React.useState('grey');
+  const arrNivelesLuz = [props.niveles];
+
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
       { text: 'Yes', onPress: () => props.navigation.navigate('Login') },
@@ -20,15 +22,21 @@ export default function Light(props) {
     ]);
   };
 
+  // const localizarNivel = () => {
+  //   for (let i = 0; i < arrNivelesLuz.length; i++) {
+  //     if()
+  //   }
+  // };
+
   const icon = () => {
-    if (color === 'grey') {
-      setColor('yellow');
-      setModo('On')
+    if (colorBulb === 'grey') {
+      setColorBulb('yellow');
+      setModo('On');
     } else {
-      setColor('grey');
-      setModo('Off')
+      setColorBulb('grey');
+      setModo('Off');
     }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.layout}>
@@ -62,7 +70,10 @@ export default function Light(props) {
             style={styles.bar}
             animateTransitions={true}
             maximumValue={max}
-            value={barra}
+            value={consultarLuz}
+            onValueChange={(newText) => {
+              setConsultarLuz(newText);
+            }}
             maximumTrackTintColor="white"
             minimumTrackTintColor="white"
             thumbTintColor="black"
@@ -70,14 +81,16 @@ export default function Light(props) {
           />
         </View>
         <View style={styles.viewNum}>
-          <Text style={styles.numeros}>0</Text>
+          <Text style={styles.numeros}>1</Text>
+          <Text style={styles.numeros}>2</Text>
+          <Text style={styles.numeros}>3</Text>
+          <Text style={styles.numeros}>4</Text>
           <Text style={styles.numeros}>5</Text>
+          <Text style={styles.numeros}>6</Text>
+          <Text style={styles.numeros}>7</Text>
+          <Text style={styles.numeros}>8</Text>
+          <Text style={styles.numeros}>9</Text>
           <Text style={styles.numeros}>10</Text>
-          <Text style={styles.numeros}>15</Text>
-          <Text style={styles.numeros}>20</Text>
-          <Text style={styles.numeros}>25</Text>
-          <Text style={styles.numeros}>30</Text>
-          <Text style={styles.numeros}>35</Text>
         </View>
         <View style={styles.viewNum}>
           <Text style={styles.text}>
@@ -89,6 +102,7 @@ export default function Light(props) {
               style={styles.width}
               keyboardType="numeric"
               maxLength={20}
+              onChangeText={(newText) => setConsultarLuz(newText)}
               underlineColor={'transparent'}
               theme={{ colors: { text: '', primary: '' } }}
               placeholder="Write an hour"
@@ -97,16 +111,19 @@ export default function Light(props) {
               style={styles.button}
               alignSelf="center"
               mode="contained"
-              color="#dba534">
+              color="orange">
               Show
             </Button>
           </View>
+        </View>
+        <View style={styles.viewLevel}>
+          <Text style={styles.textLevel}>17º</Text>
         </View>
         <View style={styles.viewBulb}>
           <IconButton
             style={styles.iconos}
             icon="lightbulb-variant-outline"
-            color={color}
+            color={colorBulb}
             size={100}
             onPress={icon}
           />
@@ -144,6 +161,17 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'black',
   },
+  viewLevel: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  textLevel: {
+    textAlign: 'center',
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: 'white',
+  },
   bar: {
     backgroundColor: '#191414',
     paddingHorizontal: 10,
@@ -170,7 +198,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   viewBulb: {
-    marginTop: 40,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -190,7 +217,7 @@ const styles = StyleSheet.create({
   },
   titulo: {
     textAlign: 'center',
-    fontSize: 30,
+    fontSize: 35,
     fontWeight: 'bold',
     color: 'white',
     fontFamily: 'Candara',

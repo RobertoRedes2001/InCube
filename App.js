@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { PantallasProvider } from './Pantallas/PantallasContext';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Dimensions } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import Login from './Pantallas/login';
@@ -19,30 +19,75 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   return (
     <PantallasProvider>
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Light" component={Tabs} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Light" component={Tabs} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </PantallasProvider>
   );
 }
 
 const Tabs = () => (
-  <Tab.Navigator initialRouteName="Light" screenOptions={{ headerShown: false }}>
-    <Tab.Screen options={{ tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons name="lightbulb-variant-outline" color={'black'} size={size} />
-          )}} name="Light" component={Light} />
-    <Tab.Screen options={{ tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons name="thermometer" color={'black'} size={size} />
-          )}} name="Temperature" component={Temperature} />
-    <Tab.Screen options={{ tabBarIcon: ({ size }) => (
-            <MaterialCommunityIcons name="garage" color={'black'} size={size} />
-          )}} name="Door" component={Door} />
-    <Tab.Screen options={{ tabBarIcon: ({ size }) => (
-            <FontAwesome name="gear" color={'black'} size={size} />
-          )}} name="Config" component={Config} />
+  <Tab.Navigator
+    options={{ headerShown: false }}
+    screenOptions={({ route }) => ({
+      tabBarStyle: {
+        backgroundColor: 'orange',
+        height: Dimensions.get('window').height / 11,
+        borderTopWidth: 2,
+        borderTopColor: 'white',
+      },
+      tabBarIcon: ({ color }) => {
+        let iconName;
+
+        switch (route.name) {
+          case 'Light':
+            iconName = 'lightbulb-o';
+            break;
+
+          case 'Temperature':
+            iconName = 'thermometer';
+            break;
+
+          case 'Door':
+            iconName = 'cube';
+            break;
+          case 'Config':
+            iconName = 'gear';
+            break;
+        }
+        return (
+          <FontAwesome name={iconName} size={40} color={color} />
+        );
+      },
+      tabBarActiveTintColor: 'white',
+      tabBarInactiveTintColor: '#344955',
+      tabBarShowLabel: false,
+    })}>
+    <Tab.Screen
+      name="Light"
+      component={Light}
+      options={{ headerShown: false }}
+    />
+    <Tab.Screen
+      name="Temperature"
+      component={Temperature}
+      options={{ headerShown: false }}
+    />
+    <Tab.Screen 
+      name="Door" 
+      component={Door} 
+      options={{ headerShown: false }} 
+    />
+    <Tab.Screen
+      name="Config"
+      component={Config}
+      options={{ headerShown: false }}
+    />
   </Tab.Navigator>
 );

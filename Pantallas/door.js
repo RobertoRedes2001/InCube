@@ -71,7 +71,7 @@ export default function Door(props) {
               style={styles.button}
               alignSelf="center"
               mode="contained"
-              color="#dba534"
+              color="orange"
               onPress={abrir}>
               {boton}
             </Button>

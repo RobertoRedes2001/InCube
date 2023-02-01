@@ -9,7 +9,7 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Temperature(props) {
-  const max = 35;
+  const max = 10;
   const [barra, setBarra] = React.useState(0);
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
@@ -85,7 +85,7 @@ export default function Temperature(props) {
               style={styles.button}
               alignSelf="center"
               mode="contained"
-              color="#dba534">
+              color="orange">
               Show
             </Button>
           </View>
@@ -93,7 +93,7 @@ export default function Temperature(props) {
         <View style={styles.viewLevel}>
           <Text style={styles.textLevel}>17º</Text>
         </View>
-        <View style={styles.viewLevel}>
+        <View style={styles.viewLevel2}>
           <Text style={styles.textLevel}>Actual{'\n'}level:</Text>
           <Text style={styles.textLevel}>25º</Text>
         </View>
@@ -109,12 +109,16 @@ const styles = StyleSheet.create({
   },
   viewLevel: {
     flexDirection: 'row',
-    marginTop: 40,
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
+  viewLevel2: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginTop: 20,
+  },
   textLevel: {
-    marginTop: 30,
     textAlign: 'center',
     fontSize: 40,
     fontWeight: 'bold',
