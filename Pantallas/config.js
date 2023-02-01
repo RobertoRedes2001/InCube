@@ -8,27 +8,15 @@ import { Dimensions } from 'react-native';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-export default function Light(props) {
+export default function Config(props) {
   const max = 35;
   const [barra, setBarra] = React.useState(0);
-  const [modo, setModo] = React.useState('Off');
-  const [color, setColor] = React.useState('grey')
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
       { text: 'Yes', onPress: () => props.navigation.navigate('Login') },
       { text: 'No' },
     ]);
   };
-
-  const icon = () => {
-    if (color === 'grey') {
-      setColor('yellow');
-      setModo('On')
-    } else {
-      setColor('grey');
-      setModo('Off')
-    }
-  }
 
   return (
     <SafeAreaView style={styles.layout}>
@@ -87,7 +75,7 @@ export default function Light(props) {
           <View>
             <TextInput
               style={styles.width}
-              keyboardType="numeric"
+              keyboardType='numeric'
               maxLength={20}
               underlineColor={'transparent'}
               theme={{ colors: { text: '', primary: '' } }}
@@ -98,19 +86,9 @@ export default function Light(props) {
               alignSelf="center"
               mode="contained"
               color="#dba534">
-              Show
+              See
             </Button>
           </View>
-        </View>
-        <View style={styles.viewBulb}>
-          <IconButton
-            style={styles.iconos}
-            icon="lightbulb-variant-outline"
-            color={color}
-            size={100}
-            onPress={icon}
-          />
-          <Text style={styles.textBulb}>{modo}</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -132,10 +110,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'black',
     height: 57,
-    width: 135,
+    width: 160,
     overflow: 'hidden',
     backgroundColor: '#fff',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   button: {
     borderRadius: 30,
@@ -169,11 +147,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
-  viewBulb: {
-    marginTop: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   numeros: {
     color: 'white',
     fontSize: 20,
@@ -199,13 +172,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     textAlign: 'center',
     fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  textBulb: {
-    marginTop: 30,
-    textAlign: 'center',
-    fontSize: 40,
     fontWeight: 'bold',
     color: 'white',
   },

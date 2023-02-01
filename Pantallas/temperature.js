@@ -8,27 +8,15 @@ import { Dimensions } from 'react-native';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-export default function Light(props) {
+export default function Temperature(props) {
   const max = 35;
   const [barra, setBarra] = React.useState(0);
-  const [modo, setModo] = React.useState('Off');
-  const [color, setColor] = React.useState('grey')
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
       { text: 'Yes', onPress: () => props.navigation.navigate('Login') },
       { text: 'No' },
     ]);
   };
-
-  const icon = () => {
-    if (color === 'grey') {
-      setColor('yellow');
-      setModo('On')
-    } else {
-      setColor('grey');
-      setModo('Off')
-    }
-  }
 
   return (
     <SafeAreaView style={styles.layout}>
@@ -55,7 +43,7 @@ export default function Light(props) {
         </View>
       </View>
       <View>
-        <Text style={styles.titulo}>Light</Text>
+        <Text style={styles.titulo}>Temperature</Text>
         <Text style={styles.titulo}>Regulator</Text>
         <View style={styles.separacion}>
           <Slider
@@ -70,19 +58,19 @@ export default function Light(props) {
           />
         </View>
         <View style={styles.viewNum}>
-          <Text style={styles.numeros}>0</Text>
-          <Text style={styles.numeros}>5</Text>
-          <Text style={styles.numeros}>10</Text>
-          <Text style={styles.numeros}>15</Text>
-          <Text style={styles.numeros}>20</Text>
-          <Text style={styles.numeros}>25</Text>
-          <Text style={styles.numeros}>30</Text>
-          <Text style={styles.numeros}>35</Text>
+          <Text style={styles.numeros}>0º</Text>
+          <Text style={styles.numeros}>5º</Text>
+          <Text style={styles.numeros}>10º</Text>
+          <Text style={styles.numeros}>15º</Text>
+          <Text style={styles.numeros}>20º</Text>
+          <Text style={styles.numeros}>25º</Text>
+          <Text style={styles.numeros}>30º</Text>
+          <Text style={styles.numeros}>35º</Text>
         </View>
         <View style={styles.viewNum}>
           <Text style={styles.text}>
             Introduce an hour to{'\n'}
-            see the light level:
+            see the temperature level:
           </Text>
           <View>
             <TextInput
@@ -102,15 +90,12 @@ export default function Light(props) {
             </Button>
           </View>
         </View>
-        <View style={styles.viewBulb}>
-          <IconButton
-            style={styles.iconos}
-            icon="lightbulb-variant-outline"
-            color={color}
-            size={100}
-            onPress={icon}
-          />
-          <Text style={styles.textBulb}>{modo}</Text>
+        <View style={styles.viewLevel}>
+          <Text style={styles.textLevel}>17º</Text>
+        </View>
+        <View style={styles.viewLevel}>
+          <Text style={styles.textLevel}>Actual{'\n'}level:</Text>
+          <Text style={styles.textLevel}>25º</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -121,6 +106,19 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     backgroundColor: '#3c525b',
+  },
+  viewLevel: {
+    flexDirection: 'row',
+    marginTop: 40,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  textLevel: {
+    marginTop: 30,
+    textAlign: 'center',
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: 'white',
   },
   width: {
     marginTop: 30,
@@ -169,11 +167,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
   },
-  viewBulb: {
-    marginTop: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   numeros: {
     color: 'white',
     fontSize: 20,
@@ -199,13 +192,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     textAlign: 'center',
     fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  textBulb: {
-    marginTop: 30,
-    textAlign: 'center',
-    fontSize: 40,
     fontWeight: 'bold',
     color: 'white',
   },

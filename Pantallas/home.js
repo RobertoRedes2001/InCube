@@ -1,37 +1,33 @@
 import * as React from 'react';
-import { TextInput, Button, Text } from 'react-native-paper';
-import Constants from 'expo-constants';
-import Icon from 'react-native-ionicons';
-import { useState, useEffect } from 'react';
+import { Text } from 'react-native-paper';
+import { useContext } from 'react';
+import PantallasContext from './PantallasContext';
 import { IconButton } from 'react-native-paper';
-import { StyleSheet, View, SafeAreaView } from 'react-native';
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from 'react-native-chart-kit';
+import { StyleSheet, View, SafeAreaView, Alert } from 'react-native';
+import { LineChart, BarChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
+const Home = (props) => {
+  const { user, setUser } = useContext(PantallasContext);
 
-const home = (props) => {
+  const data = {
+    labels: ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00'],
+    datasets: [
+      {
+        data: [400, 425, 500, 550, 450, 470],
+      },
+    ],
+  };
 
-  const [user, setUser] = useState("Paco");
-
-const data = {
-  labels: ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00'],
-  datasets: [
-    {
-      data: [400, 425, 500, 550, 450, 470],
-    },
-  ],
-};
-
+  const exit = () => {
+    Alert.alert('Log Out', 'Do you want to log out?', [
+      { text: 'Yes', onPress: () => props.navigation.navigate('Login')},
+      { text: 'No' },
+    ]);
+  };
 
   return (
     <SafeAreaView style={styles.layout}>
@@ -43,9 +39,10 @@ const data = {
           <IconButton
             style={styles.buttonBack}
             alignSelf="center"
-            icon="backburger"
+            icon="exit-to-app"
             color="white"
             size={35}
+            onPress={exit}
           />
         </View>
       </View>
@@ -53,7 +50,6 @@ const data = {
         data={data}
         width={screenWidth}
         height={200}
-        
         chartConfig={{
           backgroundColor: 'white',
           backgroundGradientFrom: '#3c525b',
@@ -103,6 +99,7 @@ const data = {
         icon="format-list-bulleted"
         color="white"
         size={40}
+        onPress={() => props.navigation.navigate('Light')}
       />
     </SafeAreaView>
   );
@@ -120,10 +117,12 @@ const styles = StyleSheet.create({
     height: screenHeight / 10,
     width: screenWidth,
     marginBottom: 50,
+    borderBottomColor:"white",
+    borderBottomWidth:2,
   },
   izquierda: {
     flex: 1,
-    justifyContent:"flex-end",
+    justifyContent: 'flex-end',
   },
   derecha: {
     flex: 1,
@@ -131,10 +130,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   textoUser: {
-    color:"white",
-    fontWeight:"bold",
-    marginBottom:10,
-    marginLeft:10,
+    color: 'white',
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginLeft: 10,
   },
 
   button: {
@@ -142,10 +141,10 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     backgroundColor: 'orange',
   },
-  buttonBack: { 
-    marginBottom:-4,
-    marginRight:-1,
+  buttonBack: {
+    marginBottom: -4,
+    marginRight: -1,
   },
 });
 
-export default home;
+export default Home;
