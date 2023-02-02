@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { PantallasProvider } from './Pantallas/PantallasContext';
+import { PantallasProvider } from './components/PantallasContext';
 import { Dimensions } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -23,7 +23,7 @@ export default function App() {
         <Stack.Navigator
           initialRouteName="Login"
           screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Login" component={Door} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Light" component={Tabs} />
         </Stack.Navigator>

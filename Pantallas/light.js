@@ -2,18 +2,23 @@ import * as React from 'react';
 import { TextInput, Button } from 'react-native-paper';
 import { StyleSheet, View, Text, SafeAreaView, Alert } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { Slider } from '@miblanchard/react-native-slider';
+import CircularPicker from 'react-native-circular-picker';
 import { Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Light(props) {
-  const max = 9;
-  const [consultarLuz, setConsultarLuz] = React.useState(0);
+  const handleChange = (v) => setNivelLuz((v / 2.5).toFixed(0));
+  const [consultaLuz, setConsultaLuz] = React.useState('');
   const [modo, setModo] = React.useState('Off');
   const [colorBulb, setColorBulb] = React.useState('grey');
-  const arrNivelesLuz = [props.niveles];
+  const [nivelLuz, setNivelLuz] = React.useState(0);
+  const [horaLuz, setHoraLuz] = React.useState('');
+  const arrNivelesLuz = [
+    { hora: '16', luz: '3' },
+    { hora: '11', luz: '7' },
+  ];
 
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
@@ -22,19 +27,23 @@ export default function Light(props) {
     ]);
   };
 
-  // const localizarNivel = () => {
-  //   for (let i = 0; i < arrNivelesLuz.length; i++) {
-  //     if()
-  //   }
-  // };
+  const localizarNivel = () => {
+    let registro = '';
 
-  const icon = () => {
-    if (colorBulb === 'grey') {
-      setColorBulb('yellow');
-      setModo('On');
+    for (let i = 0; i < arrNivelesLuz.length; i++) {
+      if (arrNivelesLuz[i].hora === horaLuz) {
+        registro += arrNivelesLuz[i].luz;
+      }
+    }
+
+    if (registro !== '') {
+      setConsultaLuz(registro);
     } else {
-      setColorBulb('grey');
-      setModo('Off');
+      Alert.alert(
+        'Error ❌',
+        'There is no record of light at the time ' + horaLuz,
+        [{ text: 'OK' }]
+      );
     }
   };
 
@@ -62,72 +71,57 @@ export default function Light(props) {
           />
         </View>
       </View>
-      <View>
-        <Text style={styles.titulo}>Light</Text>
-        <Text style={styles.titulo}>Regulator</Text>
-        <View style={styles.separacion}>
-          <Slider
-            style={styles.bar}
-            animateTransitions={true}
-            maximumValue={max}
-            value={consultarLuz}
-            onValueChange={(newText) => {
-              setConsultarLuz(newText);
-            }}
-            maximumTrackTintColor="white"
-            minimumTrackTintColor="white"
-            thumbTintColor="black"
-            step={1}
-          />
-        </View>
-        <View style={styles.viewNum}>
-          <Text style={styles.numeros}>1</Text>
-          <Text style={styles.numeros}>2</Text>
-          <Text style={styles.numeros}>3</Text>
-          <Text style={styles.numeros}>4</Text>
-          <Text style={styles.numeros}>5</Text>
-          <Text style={styles.numeros}>6</Text>
-          <Text style={styles.numeros}>7</Text>
-          <Text style={styles.numeros}>8</Text>
-          <Text style={styles.numeros}>9</Text>
-          <Text style={styles.numeros}>10</Text>
-        </View>
-        <View style={styles.viewNum}>
-          <Text style={styles.text}>
-            Introduce an hour to{'\n'}
-            see the light level:
-          </Text>
-          <View>
-            <TextInput
-              style={styles.width}
-              keyboardType="numeric"
-              maxLength={20}
-              onChangeText={(newText) => setConsultarLuz(newText)}
-              underlineColor={'transparent'}
-              theme={{ colors: { text: '', primary: '' } }}
-              placeholder="Write an hour"
-            />
-            <Button
-              style={styles.button}
-              alignSelf="center"
-              mode="contained"
-              color="orange">
-              Show
-            </Button>
+      <View style={styles.bot}>
+        <View style={styles.zona1}>
+          <Text style={styles.titulo}>Light</Text>
+          <Text style={styles.titulo}>Regulator</Text>
+          <View style={styles.separacion}>
+            <CircularPicker
+              size={200}
+              steps={[15, 40, 70, 100]}
+              gradients={{
+                0: ['rgb(0, 122, 255)', 'rgb(0, 122, 255)'],
+                15: ['rgb(255, 214, 10)', 'rgb(255, 214, 10)'],
+                40: ['rgb(255, 164, 32)', 'rgb(255, 164, 32)'],
+                70: ['rgb(247, 22, 0)', 'rgb(247, 22, 0)'],
+              }}
+              onChange={handleChange}>
+              <>
+                <Text style={styles.grados}>{nivelLuz}</Text>
+              </>
+            </CircularPicker>
           </View>
         </View>
-        <View style={styles.viewLevel}>
-          <Text style={styles.textLevel}>17º</Text>
-        </View>
-        <View style={styles.viewBulb}>
-          <IconButton
-            style={styles.iconos}
-            icon="lightbulb-variant-outline"
-            color={colorBulb}
-            size={100}
-            onPress={icon}
-          />
-          <Text style={styles.textBulb}>{modo}</Text>
+        <View style={styles.zona2}>
+          <View style={styles.viewNum}>
+            <Text style={styles.text}>
+              Introduce an hour to{'\n'}
+              see the light level:
+            </Text>
+            <View>
+              <TextInput
+                style={styles.width}
+                keyboardType="numeric"
+                maxLength={20}
+                value={horaLuz}
+                onChangeText={(newText) => setHoraLuz(newText)}
+                underlineColor={'transparent'}
+                theme={{ colors: { text: '', primary: '' } }}
+                placeholder="Write an hour"
+              />
+              <Button
+                style={styles.button}
+                alignSelf="center"
+                mode="contained"
+                color="orange"
+                onPress={localizarNivel}>
+                Show
+              </Button>
+            </View>
+          </View>
+          <View style={styles.viewLevel}>
+            <Text style={styles.textLevel}>{consultaLuz}</Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -136,11 +130,20 @@ export default function Light(props) {
 
 const styles = StyleSheet.create({
   layout: {
-    flex: 1,
+    flex: 5,
     backgroundColor: '#3c525b',
   },
+  zona1: {
+    flex: 1.5,
+    justifyContent: 'center'
+  },
+  zona2: {
+    flex: 1,
+  },
+  bot: {
+    flex: 4,
+  },
   width: {
-    marginTop: 30,
     marginBottom: 10,
     fontSize: 18,
     borderRadius: 30,
@@ -158,7 +161,6 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderTopEndRadius: 30,
     borderTopLeftRadius: 30,
-    borderWidth: 2,
     borderColor: 'black',
   },
   viewLevel: {
@@ -172,22 +174,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  bar: {
-    backgroundColor: '#191414',
-    paddingHorizontal: 10,
-  },
+
   separacion: {
-    marginLeft: 24,
-    marginRight: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   top: {
     flexDirection: 'row',
     backgroundColor: 'orange',
     height: screenHeight / 10,
     width: screenWidth,
-    marginBottom: 50,
     borderBottomColor: 'white',
     borderBottomWidth: 2,
+    flex: 0.4,
+  },
+  grados: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
   },
   iconos: {
     marginBottom: -4,
@@ -196,15 +201,12 @@ const styles = StyleSheet.create({
   viewNum: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    flex: 1,
   },
   viewBulb: {
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  numeros: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
+    flex: 1,
   },
   izquierda: {
     flex: 1,

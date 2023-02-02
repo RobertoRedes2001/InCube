@@ -2,10 +2,10 @@ import * as React from 'react';
 import { TextInput, Button } from 'react-native-paper';
 import { StyleSheet, View, Text, Image, Alert } from 'react-native';
 import { useContext, useState } from 'react';
-import PantallasContext from './PantallasContext';
+import PantallasContext from '../components/PantallasContext';
 
 export default function Login({ navigation }) {
-  const logo = require('./logo.jpg');
+  const logo = require('../components/logo.jpg');
   const { user, setUser } = useContext(PantallasContext);
   const [pass, setPass] = useState('');
   const [visible, setVisible] = useState(true);

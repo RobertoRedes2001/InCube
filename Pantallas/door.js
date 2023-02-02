@@ -55,27 +55,17 @@ export default function Door(props) {
           />
         </View>
       </View>
-      <View>
+      <View style={styles.contenido}>
         <Text style={styles.titulo}>Open/Close</Text>
-        <Text style={styles.titulo}>Door</Text>
-        <View style={styles.viewNum}>
+        <View style={styles.icono}>
           <IconButton
             style={styles.iconos}
             icon={door}
             color={'white'}
             size={100}
+            onPress={abrir}
           />
-          <View style={styles.contenido}>
-            <Text style={styles.titulo}>{open}</Text>
-            <Button
-              style={styles.button}
-              alignSelf="center"
-              mode="contained"
-              color="orange"
-              onPress={abrir}>
-              {boton}
-            </Button>
-          </View>
+          <Text style={styles.titulo}>{open}</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -88,15 +78,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#3c525b',
   },
   contenido: {
-    marginTop: 40
+    marginTop: 60,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  button: {
-    marginTop: 30,
-    borderRadius: 30,
-    borderTopEndRadius: 30,
-    borderTopLeftRadius: 30,
-    borderWidth: 2,
-    borderColor: 'black',
+  icono: {
+    marginTop: 40,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   top: {
     flexDirection: 'row',
@@ -111,11 +100,6 @@ const styles = StyleSheet.create({
     marginBottom: -4,
     marginRight: -1,
   },
-  viewNum: {
-    marginTop: 40,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-  },
   izquierda: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -126,6 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   titulo: {
+    marginTop: 40,
     textAlign: 'center',
     fontSize: 50,
     fontWeight: 'bold',

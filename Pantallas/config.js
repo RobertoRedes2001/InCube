@@ -2,7 +2,6 @@ import * as React from 'react';
 import { TextInput, Button } from 'react-native-paper';
 import { StyleSheet, View, Text, SafeAreaView, Alert } from 'react-native';
 import { IconButton, Switch } from 'react-native-paper';
-import { Slider } from '@miblanchard/react-native-slider';
 import { Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
@@ -10,7 +9,16 @@ const screenHeight = Dimensions.get('window').height;
 
 export default function Config(props) {
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
-  const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  const [mode, setMode] = React.useState(' Off');
+
+  const onToggleSwitch = () => {
+    setIsSwitchOn(!isSwitchOn);
+    if (isSwitchOn === false) {
+      setMode(' On ');
+    } else {
+      setMode(' Off');
+    }
+  }
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
       { text: 'Yes', onPress: () => props.navigation.navigate('Login') },
@@ -42,13 +50,14 @@ export default function Config(props) {
           />
         </View>
       </View>
-      <View>
-        <Text style={styles.titulo}>Developer mode: </Text>
+      <View style={styles.viewTitulo}>
+        <Text style={styles.titulo}>Developer mode </Text>
         <Switch
           value={isSwitchOn}
           onValueChange={onToggleSwitch}
           color="orange"
         />
+        <Text style={styles.titulo}>{mode}</Text>
       </View>
     </SafeAreaView>
   );
@@ -58,6 +67,10 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     backgroundColor: '#3c525b',
+  },
+  viewTitulo: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   top: {
     flexDirection: 'row',

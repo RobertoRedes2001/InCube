@@ -23,11 +23,15 @@
     "react-native-reanimated": "~2.9.1",
     "@react-navigation/drawer": "*",
     "@react-navigation/native": "6.0.0",
+    "react-native-vector-icons": "*",
     "react-native-gesture-handler": "~2.5.0",
+    "@react-navigation/bottom-tabs": "*",
     "react-native-safe-area-context": "4.3.1",
     "@miblanchard/react-native-slider": "*",
-    "@react-navigation/bottom-tabs": "*",
-    "react-native-vector-icons": "*"
+    "react-native-paper-datetimepicker": "*",
+    "react-window": "^1.8.0",
+    "intl": "*",
+    "react-native-circular-picker": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

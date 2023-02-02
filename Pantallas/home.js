@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text } from 'react-native-paper';
 import { useContext } from 'react';
-import PantallasContext from './PantallasContext';
+import PantallasContext from '../components/PantallasContext';
 import { IconButton } from 'react-native-paper';
 import { StyleSheet, View, SafeAreaView, Alert } from 'react-native';
 import { LineChart, BarChart } from 'react-native-chart-kit';
