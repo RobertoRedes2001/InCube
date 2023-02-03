@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { TextInput, Button } from 'react-native-paper';
+import { useContext } from 'react';
+import PantallasContext from '../components/PantallasContext';
 import { StyleSheet, View, Text, SafeAreaView, Alert } from 'react-native';
 import { IconButton, Switch } from 'react-native-paper';
 import { Dimensions } from 'react-native';
@@ -8,6 +9,7 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Config(props) {
+  const { user, setUser } = useContext(PantallasContext);
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
   const [mode, setMode] = React.useState(' Off');
 
@@ -18,7 +20,7 @@ export default function Config(props) {
     } else {
       setMode(' Off');
     }
-  }
+  };
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
       { text: 'Yes', onPress: () => props.navigation.navigate('Login') },
@@ -30,14 +32,9 @@ export default function Config(props) {
     <SafeAreaView style={styles.layout}>
       <View style={styles.top}>
         <View style={styles.izquierda}>
-          <IconButton
-            style={styles.iconos}
-            alignSelf="center"
-            icon="home"
-            color="white"
-            size={35}
-            onPress={() => props.navigation.navigate('Home')}
-          />
+          <View style={styles.izquierda}>
+            <Text style={styles.textoUser}> Hello {user}, Welcome</Text>
+          </View>
         </View>
         <View style={styles.derecha}>
           <IconButton
@@ -51,15 +48,15 @@ export default function Config(props) {
         </View>
       </View>
       <View style={styles.bot}>
-      <View style={styles.viewTitulo}>
-        <Text style={styles.titulo}>Developer mode </Text>
-        <Switch
-          value={isSwitchOn}
-          onValueChange={onToggleSwitch}
-          color="orange"
-        />
-        <Text style={styles.titulo}>{mode}</Text>
-      </View>
+        <View style={styles.viewTitulo}>
+          <Text style={styles.titulo}>Developer mode </Text>
+          <Switch
+            value={isSwitchOn}
+            onValueChange={onToggleSwitch}
+            color="orange"
+          />
+          <Text style={styles.titulo}>{mode}</Text>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -74,8 +71,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  bot:{
-    flex: 4
+  textoUser: {
+    color: 'white',
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+  bot: {
+    flex: 4,
   },
   top: {
     flexDirection: 'row',

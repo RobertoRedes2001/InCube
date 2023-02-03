@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { TextInput, Button } from 'react-native-paper';
-import { StyleSheet, View, Text, Image, Alert, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, Alert } from 'react-native';
 import { useContext, useState } from 'react';
-import PantallasContext from './PantallasContext';
+import PantallasContext from '../components/PantallasContext';
 
 export default function Login({ navigation }) {
-  const logo = require('./logo.jpg');
+  const logo = require('../components/logo.jpg');
   const { user, setUser } = useContext(PantallasContext);
+  const { ip, setIp } = useContext(PantallasContext);
   const [pass, setPass] = useState('');
   const [visible, setVisible] = useState(true);
   const [eye, setEye] = useState('eye-outline');
@@ -41,9 +42,15 @@ export default function Login({ navigation }) {
     }
   };
 
+  const introducirIP = () => {
+    const valor = prompt("Introduce la IP", "");
+
+    setIp(valor);
+  }
+
   return (
     <View style={styles.layout}>
-     <View style={{ height: 20 }} />
+      <View style={{ height: 20 }} />
       <View
         style={{
           marginBottom: 40,
@@ -67,57 +74,75 @@ export default function Login({ navigation }) {
         <View style={{ height: 10 }} />
         <Text style={styles.titulo}>InCube</Text>
         <View style={{ height: 10 }} />
-         <TextInput
-        style={styles.width}
-        onChangeText={(newText) => setUser(newText)}
-        left={<TextInput.Icon icon="account" color="#F8B52C" />}
-        maxLength={20}
-        defaultValue={user}
-        underlineColor={'transparent'}
-        theme={{ colors: { text: '', primary: '' } }}
-        label="Username..."
-        placeholder="Write your username..."
-      />
-      <TextInput
-        style={styles.width}
-        onChangeText={(newText) => setPass(newText)}
-        left={<TextInput.Icon icon="lock" color="#F8B52C" />}
-        right={<TextInput.Icon icon={eye} onPress={changeVisible} color="#F8B52C"  />}
-        secureTextEntry={visible}
-        maxLength={20}
-        value={pass}
-        underlineColor={'transparent'}
-        theme={{ colors: { text: '', primary: '' } }}
-        label="Password..."
-        placeholder="Write your password..."
-      />
-        <View style={{ height: 20 }} />
-        <Button
-          style={styles.button}
-          alignSelf="center"
-          mode="contained"
-          color="orange"
-          dark={true}
-          onPress={() => {
-            login();
-          }}>
-          <Text style={{ fontFamily: 'Century Gothic', fontWeight: 'bold' }}>
-            Login
-          </Text>
-        </Button>
+        <TextInput
+          style={styles.width}
+          onChangeText={(newText) => setUser(newText)}
+          left={<TextInput.Icon icon="account" color="#F8B52C" />}
+          maxLength={20}
+          defaultValue={user}
+          underlineColor={'transparent'}
+          theme={{ colors: { text: '', primary: '' } }}
+          label="Username..."
+          placeholder="Write your username..."
+        />
+        <TextInput
+          style={styles.width}
+          onChangeText={(newText) => setPass(newText)}
+          left={<TextInput.Icon icon="lock" color="#F8B52C" />}
+          right={
+            <TextInput.Icon
+              icon={eye}
+              onPress={changeVisible}
+              color="#F8B52C"
+            />
+          }
+          secureTextEntry={visible}
+          maxLength={20}
+          value={pass}
+          underlineColor={'transparent'}
+          theme={{ colors: { text: '', primary: '' } }}
+          label="Password..."
+          placeholder="Write your password..."
+        />
+        <View style={styles.botonesFinal}>
+          <Button
+            style={styles.button}
+            alignSelf="center"
+            mode="contained"
+            color="orange"
+            dark={true}
+            onPress={() => {
+              login();
+            }}>
+            Enter
+          </Button>
+          <Button
+            style={styles.button}
+            alignSelf="center"
+            mode="contained"
+            color="orange"
+            dark={true}
+            onPress={introducirIP}>
+            IP   
+          </Button>
+        </View>
       </View>
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
     justifyContent: 'center',
     flexDirection: 'column',
+    padding: 8,
     backgroundColor: '#344955',
     textAlign: 'center',
+  },
+  botonesFinal: {
+    flexDirection: 'row',
+    justifyContent:'space-evenly'
   },
   width: {
     marginLeft: 24,
@@ -137,9 +162,7 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 30,
     borderTopLeftRadius: 30,
     borderWidth: 3,
-    width:150,
     borderColor: 'white',
-
   },
   titulo: {
     textAlign: 'center',
@@ -148,95 +171,94 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Century Gothic',
     marginBottom: 20,
-    
   },
   image: {
-    width: 210,
-    height: 210,
+    width: 300,
+    height: 300,
     alignSelf: 'center',
-    borderRadius: 210 /2,
+    borderRadius: 200,
     borderWidth: 3,
-    borderColor: 'rgba(255,165,0,1)',
+    borderColor: 'rgba(248,181,44,1)',
     elevation: 10,
   },
   fullcircle0: {
-    backgroundColor: 'rgba(255,165,0,0.45)',
-    borderRadius: 215 / 2,
+    backgroundColor: 'rgba(248,181,44,0.45)',
+    borderRadius: 305 / 2,
     borderColor: 'white',
-    height: 215,
-    width: 215,
+    height: 305,
+    width: 305,
     position: 'absolute',
   },
   fullcircle: {
-    backgroundColor: 'rgba(255,165,0,0.4)',
-    borderRadius: 220 / 2,
+    backgroundColor: 'rgba(248,181,44,0.4)',
+    borderRadius: 310 / 2,
     borderColor: 'white',
-    height: 220,
-    width: 220,
+    height: 310,
+    width: 310,
     position: 'absolute',
   },
   fullcircle05: {
-    backgroundColor: 'rgba(255,165,0,0.35)',
-    borderRadius: 225 / 2,
+    backgroundColor: 'rgba(248,181,44,0.35)',
+    borderRadius: 315 / 2,
     borderColor: 'white',
-    height: 225,
-    width: 225,
+    height: 315,
+    width: 315,
     position: 'absolute',
   },
   fullcircle1: {
-    backgroundColor: 'rgba(255,165,0,0.3)',
-    borderRadius: 230 / 2,
+    backgroundColor: 'rgba(248,181,44,0.3)',
+    borderRadius: 320 / 2,
     borderColor: 'white',
-    height: 230,
-    width: 230,
+    height: 320,
+    width: 320,
     position: 'absolute',
   },
   fullcircle15: {
-    backgroundColor: 'rgba(255,165,0,0.25)',
-    borderRadius: 235 / 2,
+    backgroundColor: 'rgba(248,181,44,0.25)',
+    borderRadius: 325 / 2,
     borderColor: 'white',
-    height: 235,
-    width: 235,
+    height: 325,
+    width: 325,
     position: 'absolute',
   },
   fullcircle2: {
-    backgroundColor: 'rgba(255,165,0,0.2)',
-    borderRadius: 240 / 2,
+    backgroundColor: 'rgba(248,181,44,0.2)',
+    borderRadius: 330 / 2,
     borderColor: 'white',
-    height: 240,
-    width: 240,
+    height: 330,
+    width: 330,
     position: 'absolute',
   },
   fullcircle25: {
-    backgroundColor: 'rgba(255,165,0,0.15)',
-    borderRadius: 245 / 2,
+    backgroundColor: 'rgba(248,181,44,0.15)',
+    borderRadius: 335 / 2,
     borderColor: 'white',
-    height: 245,
-    width: 245,
+    height: 335,
+    width: 335,
     position: 'absolute',
   },
   fullcircle3: {
-    backgroundColor: 'rgba(255,165,0,0.1)',
-    borderRadius: 250 / 2,
+    backgroundColor: 'rgba(248,181,44,0.1)',
+    borderRadius: 340 / 2,
     borderColor: 'white',
-    height: 250,
-    width: 250,
+    height: 340,
+    width: 340,
     position: 'absolute',
   },
   fullcircle35: {
-    backgroundColor: 'rgba(255,165,0,0.05)',
-    borderRadius: 255 / 2,
+    backgroundColor: 'rgba(248,181,44,0.05)',
+    borderRadius: 345 / 2,
     borderColor: 'white',
-    height: 255,
-    width: 255,
+    height: 345,
+    width: 345,
     position: 'absolute',
   },
   fullcircle40: {
-    backgroundColor: 'rgba(255,165,0,0.01)',
-    borderRadius: 260 / 2,
+    backgroundColor: 'rgba(248,181,44,0.01)',
+    borderRadius: 350 / 2,
     borderColor: 'white',
-    height: 260,
-    width: 260,
+    height: 350,
+    width: 350,
     position: 'absolute',
   },
 });

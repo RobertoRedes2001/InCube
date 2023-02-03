@@ -24,7 +24,7 @@ const Home = (props) => {
 
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
-      { text: 'Yes', onPress: () => props.navigation.navigate('Login') },
+      { text: 'Yes', onPress: () => props.navigation.navigate('Login')},
       { text: 'No' },
     ]);
   };
@@ -46,91 +46,79 @@ const Home = (props) => {
           />
         </View>
       </View>
-      <View style={styles.bot}>
-        <BarChart
-          data={data}
-          width={screenWidth}
-          height={200}
-          chartConfig={{
-            backgroundColor: 'white',
-            backgroundGradientFrom: '#3c525b',
-            backgroundGradientTo: '#3c525b', // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            decimalPlaces: 0,
-          }}
-          style={{
-            marginRight: 24,
-          }}
-        />
+      <BarChart
+        data={data}
+        width={screenWidth}
+        height={200}
+        chartConfig={{
+          backgroundColor: 'white',
+          backgroundGradientFrom: '#3c525b',
+          backgroundGradientTo: '#3c525b', // optional, defaults to 2dp
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          decimalPlaces: 0,
+        }}
+        style={{
+          marginRight: 24,
+        }}
+      />
 
-        <LineChart
-          data={data}
-          width={Dimensions.get('window').width} // from react-native
-          height={350}
-          yAxisLabel=""
-          yAxisSuffix=" A"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: 'white',
-            backgroundGradientFrom: '#3c525b',
-            backgroundGradientTo: '#3c525b',
-            decimalPlaces: 0, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              stroke: 'orange',
-            },
-          }}
-          bezier
-          style={{
-            marginVertical: 8,
+      <LineChart
+        data={data}
+        width={Dimensions.get('window').width} // from react-native
+        height={350}
+        yAxisLabel=""
+        yAxisSuffix=" A"
+        yAxisInterval={1} // optional, defaults to 1
+        chartConfig={{
+          backgroundColor: 'white',
+          backgroundGradientFrom: '#3c525b',
+          backgroundGradientTo: '#3c525b',
+          decimalPlaces: 0, // optional, defaults to 2dp
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          style: {
             borderRadius: 16,
-            marginRight: 20,
-          }}
-        />
-        <View style={styles.botoEntrar}>
-          <IconButton
-            style={styles.button}
-            alignSelf="center"
-            icon="format-list-bulleted"
-            color="white"
-            size={40}
-            onPress={() => props.navigation.navigate('Light')}
-          />
-        </View>
-      </View>
+          },
+          propsForDots: {
+            r: '6',
+            strokeWidth: '2',
+            stroke: 'orange',
+          },
+        }}
+        bezier
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+          marginRight: 20,
+        }}
+      />
+      <IconButton
+        style={styles.button}
+        alignSelf="center"
+        icon="format-list-bulleted"
+        color="white"
+        size={40}
+        onPress={() => props.navigation.navigate('Light')}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   layout: {
-    flex: 5,
+    flex: 1,
     backgroundColor: '#3c525b',
     alignItems: 'center',
   },
   top: {
     flexDirection: 'row',
     backgroundColor: 'orange',
-    flex: 0.5,
     height: screenHeight / 10,
     width: screenWidth,
     marginBottom: 50,
-    borderBottomColor: 'white',
-    borderBottomWidth: 2,
-    justifyContent: 'space-between',
-  },
-  bot: {
-    flex: 4,
-  },
-  botoEntrar:{
-    alignItems: 'center'
+    borderBottomColor:"white",
+    borderBottomWidth:2,
   },
   izquierda: {
     flex: 1,

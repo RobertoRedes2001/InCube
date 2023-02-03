@@ -77,7 +77,7 @@ export default function Temperature(props) {
           />
         </View>
       </View>
-      <View style={styles.bot}>
+      <View>
         <Text style={styles.titulo}>Temperature</Text>
         <Text style={styles.titulo}>Regulator</Text>
         <View style={styles.separacion}>
@@ -134,7 +134,7 @@ export default function Temperature(props) {
 
 const styles = StyleSheet.create({
   layout: {
-    flex: 5,
+    flex: 1,
     backgroundColor: '#3c525b',
   },
   viewLevel: {
@@ -186,15 +186,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  bot:{
-    flex: 4
-  },
   top: {
     flexDirection: 'row',
     backgroundColor: 'orange',
     height: screenHeight / 10,
     width: screenWidth,
-    flex: 0.5,
     marginBottom: 50,
     borderBottomColor: 'white',
     borderBottomWidth: 2,

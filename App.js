@@ -7,11 +7,11 @@ import { Dimensions } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import Login from './Pantallas/login';
-import Home from './Pantallas/home';
 import Light from './Pantallas/light';
-import Temperature from './Pantallas/temperature';
+import Data from './Pantallas/data';
 import Door from './Pantallas/door';
 import Config from './Pantallas/config';
+import Charts from './Pantallas/charts';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,8 +23,7 @@ export default function App() {
         <Stack.Navigator
           initialRouteName="Login"
           screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={Door} />
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Light" component={Tabs} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -50,8 +49,8 @@ const Tabs = () => (
             iconName = 'lightbulb-o';
             break;
 
-          case 'Temperature':
-            iconName = 'thermometer';
+          case 'Data':
+            iconName = 'database';
             break;
 
           case 'Door':
@@ -60,10 +59,11 @@ const Tabs = () => (
           case 'Config':
             iconName = 'gear';
             break;
+          case 'Charts':
+            iconName = 'bar-chart';
+            break;
         }
-        return (
-          <FontAwesome name={iconName} size={40} color={color} />
-        );
+        return <FontAwesome name={iconName} size={40} color={color} />;
       },
       tabBarActiveTintColor: 'white',
       tabBarInactiveTintColor: '#344955',
@@ -75,14 +75,15 @@ const Tabs = () => (
       options={{ headerShown: false }}
     />
     <Tab.Screen
-      name="Temperature"
-      component={Temperature}
+      name="Data"
+      component={Data}
       options={{ headerShown: false }}
     />
-    <Tab.Screen 
-      name="Door" 
-      component={Door} 
-      options={{ headerShown: false }} 
+    <Tab.Screen name="Door" component={Door} options={{ headerShown: false }} />
+    <Tab.Screen
+      name="Charts"
+      component={Charts}
+      options={{ headerShown: false }}
     />
     <Tab.Screen
       name="Config"

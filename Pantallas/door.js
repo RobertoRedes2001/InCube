@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Button } from 'react-native-paper';
 import { StyleSheet, View, Text, SafeAreaView, Alert } from 'react-native';
 import { IconButton } from 'react-native-paper';
+import { useContext } from 'react';
+import PantallasContext from '../components/PantallasContext';
 import { Dimensions } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 export default function Door(props) {
+  const { user, setUser } = useContext(PantallasContext);
   const [door, setDoor] = React.useState('garage-variant');
   const [open, setOpen] = React.useState('Door Closed');
   const [boton, setBoton] = React.useState('Open');
@@ -35,14 +36,9 @@ export default function Door(props) {
     <SafeAreaView style={styles.layout}>
       <View style={styles.top}>
         <View style={styles.izquierda}>
-          <IconButton
-            style={styles.iconos}
-            alignSelf="center"
-            icon="home"
-            color="white"
-            size={35}
-            onPress={() => props.navigation.navigate('Home')}
-          />
+          <View style={styles.izquierda}>
+            <Text style={styles.textoUser}> Hello {user}, Welcome</Text>
+          </View>
         </View>
         <View style={styles.derecha}>
           <IconButton
@@ -86,6 +82,12 @@ const styles = StyleSheet.create({
     marginTop: 60,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  textoUser: {
+    color: 'white',
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginLeft: 10,
   },
   icono: {
     marginTop: 40,
