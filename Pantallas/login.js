@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { TextInput, Button } from 'react-native-paper';
-import { StyleSheet, View, Text, Image, Alert } from 'react-native';
+import { StyleSheet, View, Text, Image, Alert, ScrollView } from 'react-native';
 import { useContext, useState } from 'react';
-import PantallasContext from '../components/PantallasContext';
+import PantallasContext from './PantallasContext';
 
 export default function Login({ navigation }) {
-  const logo = require('../components/logo.jpg');
+  const logo = require('./logo.jpg');
   const { user, setUser } = useContext(PantallasContext);
   const [pass, setPass] = useState('');
   const [visible, setVisible] = useState(true);
@@ -102,7 +102,7 @@ export default function Login({ navigation }) {
             login();
           }}>
           <Text style={{ fontFamily: 'Century Gothic', fontWeight: 'bold' }}>
-            Entrar
+            Login
           </Text>
         </Button>
       </View>
@@ -110,12 +110,12 @@ export default function Login({ navigation }) {
   );
 }
 
+
 const styles = StyleSheet.create({
   layout: {
     flex: 1,
     justifyContent: 'center',
     flexDirection: 'column',
-    padding: 8,
     backgroundColor: '#344955',
     textAlign: 'center',
   },
@@ -137,7 +137,9 @@ const styles = StyleSheet.create({
     borderTopEndRadius: 30,
     borderTopLeftRadius: 30,
     borderWidth: 3,
+    width:150,
     borderColor: 'white',
+
   },
   titulo: {
     textAlign: 'center',
@@ -146,94 +148,95 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Century Gothic',
     marginBottom: 20,
+    
   },
   image: {
-    width: 300,
-    height: 300,
+    width: 210,
+    height: 210,
     alignSelf: 'center',
-    borderRadius: 200,
+    borderRadius: 210 /2,
     borderWidth: 3,
-    borderColor: 'rgba(248,181,44,1)',
+    borderColor: 'rgba(255,165,0,1)',
     elevation: 10,
   },
   fullcircle0: {
-    backgroundColor: 'rgba(248,181,44,0.45)',
-    borderRadius: 305 / 2,
+    backgroundColor: 'rgba(255,165,0,0.45)',
+    borderRadius: 215 / 2,
     borderColor: 'white',
-    height: 305,
-    width: 305,
+    height: 215,
+    width: 215,
     position: 'absolute',
   },
   fullcircle: {
-    backgroundColor: 'rgba(248,181,44,0.4)',
-    borderRadius: 310 / 2,
+    backgroundColor: 'rgba(255,165,0,0.4)',
+    borderRadius: 220 / 2,
     borderColor: 'white',
-    height: 310,
-    width: 310,
+    height: 220,
+    width: 220,
     position: 'absolute',
   },
   fullcircle05: {
-    backgroundColor: 'rgba(248,181,44,0.35)',
-    borderRadius: 315 / 2,
+    backgroundColor: 'rgba(255,165,0,0.35)',
+    borderRadius: 225 / 2,
     borderColor: 'white',
-    height: 315,
-    width: 315,
+    height: 225,
+    width: 225,
     position: 'absolute',
   },
   fullcircle1: {
-    backgroundColor: 'rgba(248,181,44,0.3)',
-    borderRadius: 320 / 2,
+    backgroundColor: 'rgba(255,165,0,0.3)',
+    borderRadius: 230 / 2,
     borderColor: 'white',
-    height: 320,
-    width: 320,
+    height: 230,
+    width: 230,
     position: 'absolute',
   },
   fullcircle15: {
-    backgroundColor: 'rgba(248,181,44,0.25)',
-    borderRadius: 325 / 2,
+    backgroundColor: 'rgba(255,165,0,0.25)',
+    borderRadius: 235 / 2,
     borderColor: 'white',
-    height: 325,
-    width: 325,
+    height: 235,
+    width: 235,
     position: 'absolute',
   },
   fullcircle2: {
-    backgroundColor: 'rgba(248,181,44,0.2)',
-    borderRadius: 330 / 2,
+    backgroundColor: 'rgba(255,165,0,0.2)',
+    borderRadius: 240 / 2,
     borderColor: 'white',
-    height: 330,
-    width: 330,
+    height: 240,
+    width: 240,
     position: 'absolute',
   },
   fullcircle25: {
-    backgroundColor: 'rgba(248,181,44,0.15)',
-    borderRadius: 335 / 2,
+    backgroundColor: 'rgba(255,165,0,0.15)',
+    borderRadius: 245 / 2,
     borderColor: 'white',
-    height: 335,
-    width: 335,
+    height: 245,
+    width: 245,
     position: 'absolute',
   },
   fullcircle3: {
-    backgroundColor: 'rgba(248,181,44,0.1)',
-    borderRadius: 340 / 2,
+    backgroundColor: 'rgba(255,165,0,0.1)',
+    borderRadius: 250 / 2,
     borderColor: 'white',
-    height: 340,
-    width: 340,
+    height: 250,
+    width: 250,
     position: 'absolute',
   },
   fullcircle35: {
-    backgroundColor: 'rgba(248,181,44,0.05)',
-    borderRadius: 345 / 2,
+    backgroundColor: 'rgba(255,165,0,0.05)',
+    borderRadius: 255 / 2,
     borderColor: 'white',
-    height: 345,
-    width: 345,
+    height: 255,
+    width: 255,
     position: 'absolute',
   },
   fullcircle40: {
-    backgroundColor: 'rgba(248,181,44,0.01)',
-    borderRadius: 350 / 2,
+    backgroundColor: 'rgba(255,165,0,0.01)',
+    borderRadius: 260 / 2,
     borderColor: 'white',
-    height: 350,
-    width: 350,
+    height: 260,
+    width: 260,
     position: 'absolute',
   },
 });
