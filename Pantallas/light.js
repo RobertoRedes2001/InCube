@@ -182,11 +182,13 @@ const styles = StyleSheet.create({
   top: {
     flexDirection: 'row',
     backgroundColor: 'orange',
+    justifyContent: 'space-between',
+    flex: 0.5,
     height: screenHeight / 10,
     width: screenWidth,
+    marginBottom: 50,
     borderBottomColor: 'white',
     borderBottomWidth: 2,
-    flex: 0.4,
   },
   grados: {
     textAlign: 'center',

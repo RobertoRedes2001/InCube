@@ -50,6 +50,7 @@ export default function Config(props) {
           />
         </View>
       </View>
+      <View style={styles.bot}>
       <View style={styles.viewTitulo}>
         <Text style={styles.titulo}>Developer mode </Text>
         <Switch
@@ -59,22 +60,27 @@ export default function Config(props) {
         />
         <Text style={styles.titulo}>{mode}</Text>
       </View>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   layout: {
-    flex: 1,
+    flex: 5,
     backgroundColor: '#3c525b',
   },
   viewTitulo: {
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  bot:{
+    flex: 4
+  },
   top: {
     flexDirection: 'row',
     backgroundColor: 'orange',
+    flex: 0.5,
     height: screenHeight / 10,
     width: screenWidth,
     marginBottom: 50,

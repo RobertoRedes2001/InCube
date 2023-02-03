@@ -55,17 +55,19 @@ export default function Door(props) {
           />
         </View>
       </View>
-      <View style={styles.contenido}>
-        <Text style={styles.titulo}>Open/Close</Text>
-        <View style={styles.icono}>
-          <IconButton
-            style={styles.iconos}
-            icon={door}
-            color={'white'}
-            size={100}
-            onPress={abrir}
-          />
-          <Text style={styles.titulo}>{open}</Text>
+      <View style={styles.bot}>
+        <View style={styles.contenido}>
+          <Text style={styles.titulo}>Open/Close</Text>
+          <View style={styles.icono}>
+            <IconButton
+              style={styles.iconos}
+              icon={door}
+              color={'white'}
+              size={100}
+              onPress={abrir}
+            />
+            <Text style={styles.titulo}>{open}</Text>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -74,22 +76,27 @@ export default function Door(props) {
 
 const styles = StyleSheet.create({
   layout: {
-    flex: 1,
+    flex: 5,
     backgroundColor: '#3c525b',
+  },
+  bot: {
+    flex: 4,
   },
   contenido: {
     marginTop: 60,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   icono: {
     marginTop: 40,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   top: {
     flexDirection: 'row',
     backgroundColor: 'orange',
+    justifyContent: 'space-between',
+    flex: 0.5,
     height: screenHeight / 10,
     width: screenWidth,
     marginBottom: 50,
