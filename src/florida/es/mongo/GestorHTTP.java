@@ -73,32 +73,41 @@ public class GestorHTTP implements HttpHandler {
 	// Metodes de les peticions GET //
 
 	private String[] handleGetRequest(HttpExchange httpExchange) {
-		
+
 		String tipo = httpExchange.getRequestURI().toString().split("/")[2].split("\\?")[0];
+		String[] dataError = { tipo, httpExchange.getRequestURI().toString() };
 		switch (tipo) {
 		case "users": {
-			// String queryKey =
-			// httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[0];
-			String queryUser = httpExchange.getRequestURI().toString().split("=")[1];
-			String[] dataUser = { tipo, queryUser };
-			return dataUser;
+			String queryKey = httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[0];
+			if (queryKey.equals("user")) {
+				String queryUser = httpExchange.getRequestURI().toString().split("=")[1];
+				String[] dataUser = { tipo, queryUser };
+				return dataUser;
+			} else {
+				return dataError;
+			}
 		}
 		case "temperature": {
-			// String queryKey =
-			// httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[0];
-			String queryTemperature = httpExchange.getRequestURI().toString().split("=")[1];
-			String[] dataTemperature = { tipo, queryTemperature };
-			return dataTemperature;
+			String queryKey = httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[0];
+			if (queryKey.equals("date")) {
+				String queryTemperature = httpExchange.getRequestURI().toString().split("=")[1];
+				String[] dataTemperature = { tipo, queryTemperature };
+				return dataTemperature;
+			} else {
+				return dataError;
+			}
 		}
 		case "light": {
-			// String queryKey =
-			// httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[0];
-			String queryLight = httpExchange.getRequestURI().toString().split("=")[1];
-			String[] dataLight = { tipo, queryLight };
-			return dataLight;
+			String queryKey = httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[0];
+			if (queryKey.equals("date")) {
+				String queryLight = httpExchange.getRequestURI().toString().split("=")[1];
+				String[] dataLight = { tipo, queryLight };
+				return dataLight;
+			} else {
+				return dataError;
+			}
 		}
 		default:
-			String[] dataError = { tipo };
 			return dataError;
 		}
 	}
@@ -118,14 +127,14 @@ public class GestorHTTP implements HttpHandler {
 	private String buildJsonResponse(String[] data) {
 		switch (data[0]) {
 		case "users":
-
-			MongoCursor<Document> cursorUser = users.find().iterator();
+			Bson queryUser = eq("user", data[1]);
+			MongoCursor<Document> cursorUser = users.find(queryUser).iterator();
 			String jsonUser = "[";
 			while (cursorUser.hasNext()) {
 				JSONObject obj = new JSONObject(cursorUser.next().toJson());
 				jsonUser += "{";
 				jsonUser += "\"user\":\"" + obj.getString("user") + "\",";
-				jsonUser += "\"pass\":\"" + obj.getString("pass") + "\",";
+				jsonUser += "\"pass\":\"" + obj.getString("pass") + "\"";
 				jsonUser += "}";
 				if (cursorUser.hasNext()) {
 					jsonUser += ",";
@@ -134,20 +143,19 @@ public class GestorHTTP implements HttpHandler {
 			jsonUser += "]";
 
 			return jsonUser;
-			
+
 		case "temperature":
-			
+
 			Bson queryTemperature = eq("date", data[1]);
 			MongoCursor<Document> cursorTemperature = temperature.find(queryTemperature).iterator();
 			String jsonTemperature = "[";
 			while (cursorTemperature.hasNext()) {
 				jsonTemperature += "{";
-				
-				JSONObject obj = new JSONObject(cursorTemperature.next().toJson());
-				jsonTemperature += "\"temperature\":\"" + obj.getString("temperature") + "\",";
-				jsonTemperature += "\"date\":\"" + obj.getString("date") + "\",";
-				jsonTemperature += "\"register\":\"" + obj.getString("register") + "\",";
-				jsonTemperature += "\"user\":\"" + obj.getString("user") + "\"";
+				JSONObject objTemp = new JSONObject(cursorTemperature.next().toJson());
+				jsonTemperature += "\"temperature\":\"" + objTemp.getString("temperature") + "\",";
+				jsonTemperature += "\"date\":\"" + objTemp.getString("date") + "\",";
+				jsonTemperature += "\"register\":\"" + objTemp.getString("register") + "\",";
+				jsonTemperature += "\"user\":\"" + objTemp.getString("user") + "\"";
 				jsonTemperature += "}";
 				if (cursorTemperature.hasNext()) {
 					jsonTemperature += ",";
@@ -158,7 +166,7 @@ public class GestorHTTP implements HttpHandler {
 
 		case "light":
 			Bson queryLight = eq("date", data[1]);
-			MongoCursor<Document> cursorLight = light.find().iterator();
+			MongoCursor<Document> cursorLight = light.find(queryLight).iterator();
 			String jsonLight = "[";
 			while (cursorLight.hasNext()) {
 				jsonLight += "{";
@@ -166,7 +174,7 @@ public class GestorHTTP implements HttpHandler {
 				jsonLight += "\"level\":\"" + obj.getString("level") + "\",";
 				jsonLight += "\"date\":\"" + obj.getString("date") + "\",";
 				jsonLight += "\"register\":\"" + obj.getString("register") + "\",";
-				jsonLight += "\"user\":\"" + obj.getString("user") + "\",";
+				jsonLight += "\"user\":\"" + obj.getString("user") + "\"";
 				jsonLight += "}";
 				if (cursorLight.hasNext()) {
 					jsonLight += ",";
@@ -177,7 +185,7 @@ public class GestorHTTP implements HttpHandler {
 			return jsonLight;
 
 		default:
-			return "[{Err:" + data[0] + " not found}]";
+			return "[{Err: " + data[1] + " not found}]";
 		}
 
 	}
