@@ -15,6 +15,18 @@ import com.fazecast.jSerialComm.SerialPort;
 
 public class ClienteArduino {
 
+	//PETICIONES: http://54.198.123.240:5001/test?codigo=1 (1-10)
+		// 1 - Apagar
+		// 2 - Encender
+		// 3 - Abrir puerta (servo a 0)
+		// 4 - Cerrar puerta (servo a 180)
+		// 5 - Luz Azul
+		// 6 - Luz Amarilla
+		// 7 - Luz Naranja
+		// 8 - Luz Roja
+		// 9 - Leer luz
+		// 10 - Leer temperatura
+	
 	public static void main(String[] args) throws IOException {
 		
 		SerialPort[] portNames = SerialPort.getCommPorts();
@@ -51,12 +63,14 @@ public class ClienteArduino {
 		PrintWriter pw = new PrintWriter(servidor.getOutputStream());
 		while(true) {
 			String codigo = bf.readLine();
-			System.out.println(codigo);
+			System.out.println("CLIENTE >>> "+codigo);
 			int codigoInstruccion = Integer.parseInt(codigo);
 			String respuestaArduino = gestorArduino.gestionaInstruccion(codigoInstruccion);
-			System.out.println(respuestaArduino);
-			pw.write(respuestaArduino + "\n");
-			pw.flush();
+			System.out.println("CLIENTE >>> "+respuestaArduino);
+			if(codigoInstruccion>=9) {
+				pw.write(respuestaArduino + "\n");
+				pw.flush();
+			}
 		}
 	}
 
