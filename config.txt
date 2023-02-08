@@ -1,5 +1,5 @@
 ip=localhost
 puerto=5000
-contexto=/test
+contexto=/api
 backlog=0
 numHilos=10

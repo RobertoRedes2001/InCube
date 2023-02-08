@@ -82,6 +82,7 @@ public class GestorHTTP implements HttpHandler {
 			if (queryKey.equals("user")) {
 				String queryUser = httpExchange.getRequestURI().toString().split("=")[1];
 				String[] dataUser = { tipo, queryUser };
+				System.out.println(tipo+" "+queryUser);
 				return dataUser;
 			} else {
 				return dataError;
@@ -92,6 +93,7 @@ public class GestorHTTP implements HttpHandler {
 			if (queryKey.equals("date")) {
 				String queryTemperature = httpExchange.getRequestURI().toString().split("=")[1];
 				String[] dataTemperature = { tipo, queryTemperature };
+				System.out.println(dataTemperature);
 				return dataTemperature;
 			} else {
 				return dataError;
@@ -102,6 +104,7 @@ public class GestorHTTP implements HttpHandler {
 			if (queryKey.equals("date")) {
 				String queryLight = httpExchange.getRequestURI().toString().split("=")[1];
 				String[] dataLight = { tipo, queryLight };
+				System.out.println(dataLight.toString());
 				return dataLight;
 			} else {
 				return dataError;
