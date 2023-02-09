@@ -1,0 +1,43 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~46.0.19",
+    "expo-status-bar": "~1.4.0",
+    "react": "18.0.0",
+    "react-native": "0.69.6",
+    "intl": "*",
+    "react-window": "^1.8.0",
+    "expo-constants": "~13.2.4",
+    "react-native-svg": "12.3.0",
+    "@expo/vector-icons": "^13.0.0",
+    "react-native-paper": "4.9.2",
+    "react-google-charts": "*",
+    "react-native-screens": "~3.15.0",
+    "react-native-ionicons": "*",
+    "react-native-chart-kit": "*",
+    "@react-navigation/stack": "*",
+    "react-native-reanimated": "~2.9.1",
+    "@react-navigation/drawer": "*",
+    "@react-navigation/native": "6.0.0",
+    "react-native-vector-icons": "*",
+    "react-native-circular-picker": "*",
+    "react-native-gesture-handler": "~2.5.0",
+    "@react-navigation/bottom-tabs": "*",
+    "react-native-safe-area-context": "4.3.1",
+    "@miblanchard/react-native-slider": "*",
+    "react-native-paper-datetimepicker": "*",
+    "react-native-datepicker": "*",
+    "react-native-date-picker": "*",
+    "react-native-table-component": "*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9"
+  },
+  "private": true
+}
