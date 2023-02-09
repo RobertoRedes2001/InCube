@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import PantallasContext from '../components/PantallasContext';
 import { IconButton, Text, DataTable } from 'react-native-paper';
 import { StyleSheet, View, SafeAreaView, Alert, Dimensions } from 'react-native';
@@ -11,8 +11,8 @@ const optionsPerPage = [2, 3, 4];
 
 export default function Charts(props) {
     const { user, setUser } = useContext(PantallasContext);
-    const [page, setPage] = React.useState(0);
-    const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
+    const [page, setPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(optionsPerPage[0]);
     const data = {
         labels: ['15:00', '16:00', '17:00', '18:00', '19:00', '20:00'],
         datasets: [

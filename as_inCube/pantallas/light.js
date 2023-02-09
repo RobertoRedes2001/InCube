@@ -2,7 +2,7 @@ import * as React from 'react';
 import { TextInput, Button, IconButton, Provider as PaperProvider } from 'react-native-paper';
 import { StyleSheet, View, Text, SafeAreaView, Alert, Dimensions } from 'react-native';
 import CircularPicker from 'react-native-circular-picker';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import PantallasContext from '../components/PantallasContext';
 
 const screenWidth = Dimensions.get('window').width;
@@ -11,9 +11,9 @@ const screenHeight = Dimensions.get('window').height;
 export default function Light(props) {
     const { user, setUser } = useContext(PantallasContext);
     const handleChange = (v) => setNivelLuz((v + 50).toFixed(0));
-    const [consultaLuz, setConsultaLuz] = React.useState('');
-    const [nivelLuz, setNivelLuz] = React.useState(0);
-    const [horaLuz, setHoraLuz] = React.useState('');
+    const [consultaLuz, setConsultaLuz] = useState('');
+    const [nivelLuz, setNivelLuz] = useState(0);
+    const [horaLuz, setHoraLuz] = useState('');
     const arrNivelesLuz = [
         { hora: '16', luz: '3' },
         { hora: '11', luz: '7' },

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, View, Text, SafeAreaView, Alert, Dimensions } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import PantallasContext from '../components/PantallasContext';
 
 const screenWidth = Dimensions.get('window').width;
@@ -9,10 +9,10 @@ const screenHeight = Dimensions.get('window').height;
 
 export default function Door(props) {
   const { user, setUser } = useContext(PantallasContext);
-  const [door, setDoor] = React.useState('garage-variant');
-  const [open, setOpen] = React.useState('Door Closed');
-  const [boton, setBoton] = React.useState('Open');
-  const [estadoPuerta, setEstadoPuerta] = React.useState(false);
+  const [door, setDoor] = useState('garage-variant');
+  const [open, setOpen] = useState('Door Closed');
+  const [boton, setBoton] = useState('Open');
+  const [estadoPuerta, setEstadoPuerta] = useState(false);
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
       { text: 'Yes', onPress: () => { props.navigation.navigate('Login'); setUser(""); } },
@@ -20,17 +20,37 @@ export default function Door(props) {
     ]);
   };
 
-  const abrir = () => {
+  const abrir = async () => {
     if (door === 'garage-variant') {
       setDoor('garage-open-variant');
       setOpen('Door Opened');
       setBoton('Close');
       setEstadoPuerta(!estadoPuerta);
+      try {
+        const response = await fetch("http://54.198.123.240:5000/api?codigo=3");
+        if (response.ok) {
+          Alert.alert('OPEN 🚪', 'The door is opening', [
+            { text: 'OK' },
+          ]);
+        }
+      } catch (error) {
+        console.log(error + " puerta");
+      }
     } else {
       setDoor('garage-variant');
       setOpen('Door Closed');
       setBoton('Open');
       setEstadoPuerta(!estadoPuerta);
+      try {
+        const response = await fetch("http://54.198.123.240:5000/api?codigo=4");
+        if (response.ok) {
+          Alert.alert('CLOSE 🚪', 'The door is closing', [
+            { text: 'OK' },
+          ]);
+        }
+      } catch (error) {
+        console.log(error + " puerta");
+      }
     }
     console.log(estadoPuerta)
   };

@@ -1,8 +1,6 @@
-import * as React from 'react';
 import { TextInput, Button, IconButton } from 'react-native-paper';
 import { StyleSheet, View, Text, SafeAreaView, Alert, Dimensions } from 'react-native';
-import CircularPicker from 'react-native-circular-picker';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import PantallasContext from '../components/PantallasContext';
 
 const screenWidth = Dimensions.get('window').width;
@@ -10,18 +8,28 @@ const screenHeight = Dimensions.get('window').height;
 
 export default function Data(props) {
   const { user, setUser } = useContext(PantallasContext);
-  const [iconBulb, setIconBulb] = React.useState('lightbulb-variant-outline');
-  const [colorBulb, setColorBulb] = React.useState('white');
-  const [consultaLuz, setConsultaLuz] = React.useState('');
-  const [consultaTemp, setConsultaTemp] = React.useState('');
-  const [horaLuz, setHoraLuz] = React.useState('');
-  const [horaTemp, setHoraTemp] = React.useState('');
+  const [iconBulb, setIconBulb] = useState('lightbulb-variant-outline');
+  const [colorBulb, setColorBulb] = useState('white');
+  const [consultaLuz, setConsultaLuz] = useState('');
+  const [consultaTemp, setConsultaTemp] = useState('');
+  const [interval, setInterval] = useState('');
+  const [registro, setRegistro] = useState('');
 
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
-      { text: 'Yes', onPress: () => { props.navigation.navigate('Login'); setUser(""); }},
+      { text: 'Yes', onPress: () => { props.navigation.navigate('Login'); setUser(""); } },
       { text: 'No' },
     ]);
+  };
+
+  const intervalo = () => {
+    if ((interval < 10) || (registro === '')) {
+      Alert.alert('Error ❌', "Make sure the number of requests isn't empty and the interval is 10 or higher", [
+        { text: 'OK' },
+      ]);
+    } else {
+      start();
+    }
   };
 
   const start = () => {
@@ -39,43 +47,35 @@ export default function Data(props) {
   };
 
   const localizarNivel = () => {
-    let registro = '';
-
-    for (let i = 0; i < arrNivelesLuz.length; i++) {
-      registro = arrNivelesLuz[0].luz;
-    }
-
-    if (registro !== '') {
-      setConsultaLuz(registro);
+    let comprobar = '';
+    if (comprobar === '') {
+      setConsultaLuz('14');
     } else {
       Alert.alert(
         'Error ❌',
-        'There is no record of light at the time ' + horaLuz,
+        'There is no record of light at the time ',
         [{ text: 'OK' }]
       );
     }
   };
 
   const localizarNivelTemp = () => {
-    let registroTemp = '';
-
-    for (let i = 0; i < arrNivelesTemp.length; i++) {
-      registroTemp = arrNivelesTemp[0].luz;
-    }
-
-    if (registroTemp !== '') {
-      setConsultaTemp(registroTemp);
+    let comprobar = '';
+    if (comprobar === '') {
+      setConsultaTemp('12');
     } else {
       Alert.alert(
         'Error ❌',
-        'There is no record of temperature at the time ' + horaTemp,
+        'There is no record of temperature at the time ',
         [{ text: 'OK' }]
       );
     }
   };
 
+
+
   return (
-<SafeAreaView style={styles.layout}>
+    <SafeAreaView style={styles.layout}>
       <View style={styles.top}>
         <View style={styles.izquierda}>
           <View style={styles.izquierda}>
@@ -123,6 +123,8 @@ export default function Data(props) {
           <TextInput
             style={styles.width}
             keyboardType="numeric"
+            defaultValue={registro}
+            onChangeText={(newText) => setRegistro(newText)}
             underlineColor={'transparent'}
             theme={{ colors: { text: '', primary: '' } }}
             placeholder="Write how many records you want"
@@ -130,6 +132,8 @@ export default function Data(props) {
           <TextInput
             style={styles.width}
             keyboardType="numeric"
+            defaultValue={interval}
+            onChangeText={(newText) => setInterval(newText)}
             underlineColor={'transparent'}
             theme={{ colors: { text: '', primary: '' } }}
             placeholder="Write the interval between records"
@@ -141,7 +145,7 @@ export default function Data(props) {
             alignSelf="center"
             mode="contained"
             buttonColor="orange"
-            onPress={start}>
+            onPress={() => { intervalo }}>
             Start
           </Button>
           <Button

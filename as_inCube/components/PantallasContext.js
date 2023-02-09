@@ -4,7 +4,7 @@ const PantallasContext = createContext();
 
 export const PantallasProvider = ({ children }) => {
     const [user, setUser] = useState();
-    const [ip, setIp] = useState();
+    const [ip, setIp] = useState("");
     
     return (
         <PantallasContext.Provider value ={{ user, setUser, ip, setIp }}>

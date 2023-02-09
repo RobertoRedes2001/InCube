@@ -3,7 +3,7 @@ import { TextInput, Button } from 'react-native-paper';
 import { StyleSheet, View, Text, Image, Alert, Modal } from 'react-native';
 import { useContext, useState } from 'react';
 import PantallasContext from '../components/PantallasContext';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import md5 from 'md5';
 
 export default function Login({ navigation }) {
     const logo = require('../components/logo.jpg');
@@ -13,6 +13,8 @@ export default function Login({ navigation }) {
     const [pass, setPass] = useState('');
     const [visible, setVisible] = useState(true);
     const [eye, setEye] = useState('eye-outline');
+    let nombre = "";
+    let password = "";
 
     const changeVisible = () => {
         if (visible === true) {
@@ -24,35 +26,41 @@ export default function Login({ navigation }) {
         }
     };
 
-    const getUserApi= async() => {
-
+    const getUserApi = async () => {
+        let link = "http://54.198.123.240:5000/api/users?user=";
+        let url = link + user;
         try {
-            const response = await fetch("http://localhost:5000/api/users?user=roberto");
-            if(response.ok){
+            const response = await fetch(url);
+            if (response.ok) {
                 const dats = await response.json();
-                console.log(dats.user)
+                nombre += dats[0].user;
+                password += dats[0].pass;
+                console.log(nombre);
+                console.log(password);
+
+                if (user === nombre) {
+                    if (md5(pass) === password) {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+                
+            } else {
+                Alert.alert('Error ❌', 'The name is incorrect', [
+                    { text: 'OK' },
+                ]);
             }
 
         } catch (error) {
-            console.log("ERROR en la extraccion del usuario")
             console.log(error)
         }
     }
 
-    const handleOnChange = (nom, con) => {
-        if (user === nom) {
-            if (pass === con) {
-                return true;
-            }
-        } else {
-            return false;
-        }
-    };
-
     const login = () => {
-        if (handleOnChange('Rafa', '1234')) {
-            getUserApi();
+        if (getUserApi() && ip !== "") {
             navigation.navigate('Light');
+
         } else {
             Alert.alert('Error ❌', 'Make sure the information is correct', [
                 { text: 'OK' },
@@ -75,7 +83,7 @@ export default function Login({ navigation }) {
     }
 
     const validar = () => {
-        if(comprobarIp(ip)){
+        if (comprobarIp(ip)) {
             setModalVisible(!modalVisible);
         } else {
             Alert.alert('Error ❌', 'The IP is not valid', [
@@ -126,7 +134,7 @@ export default function Login({ navigation }) {
                         <View style={styles.modalView}>
                             <Text style={styles.modalText}>Introduce una ID: </Text>
                             <TextInput
-                            style={styles.txtI2}
+                                style={styles.txtI2}
                                 onChangeText={(text) => setIp(text)}
                                 placeholder="Introduce la ID           "
                                 underlineColor='transparent'
@@ -178,6 +186,7 @@ export default function Login({ navigation }) {
                         onPress={() => {
                             login();
                             setPass("");
+
                         }}>
                         Enter
                     </Button>
