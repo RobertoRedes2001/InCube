@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { TextInput, Button } from 'react-native-paper';
-import { StyleSheet, View, Text, Image, Alert, Modal } from 'react-native';
+import { TextInput, Button, Checkbox } from 'react-native-paper';
+import { StyleSheet, View, Text, Image, Alert, Modal, ScrollView } from 'react-native';
 import { useContext, useState } from 'react';
 import PantallasContext from '../components/PantallasContext';
 import md5 from 'md5';
@@ -8,11 +8,11 @@ import md5 from 'md5';
 export default function Login({ navigation }) {
     const logo = require('../components/logo.jpg');
     const { user, setUser } = useContext(PantallasContext);
-    const { ip, setIp } = useContext(PantallasContext);
-    const [modalVisible, setModalVisible] = useState(false);
     const [pass, setPass] = useState('');
     const [visible, setVisible] = useState(true);
     const [eye, setEye] = useState('eye-outline');
+    const [checked, setChecked] = useState(false);
+    const [showModal, setShowModal] = useState(true);
     let nombre = "";
     let password = "";
 
@@ -40,12 +40,14 @@ export default function Login({ navigation }) {
 
                 if (user === nombre) {
                     if (md5(pass) === password) {
-                        return true;
+                        if (checked === true) {
+                            return true;
+                        }
                     }
                 } else {
                     return false;
                 }
-                
+
             } else {
                 Alert.alert('Error ❌', 'The name is incorrect', [
                     { text: 'OK' },
@@ -58,7 +60,7 @@ export default function Login({ navigation }) {
     }
 
     const login = () => {
-        if (getUserApi() && ip !== "") {
+        if (getUserApi()) {
             navigation.navigate('Light');
 
         } else {
@@ -68,30 +70,6 @@ export default function Login({ navigation }) {
         }
     };
 
-    const comprobarIp = (comp) => {
-        let verdad = comp.split('.');
-        if (verdad.length != 4)
-            return false;
-        for (i in verdad) {
-            if (!/^\d+$/g.test(verdad[i])
-                || +verdad[i] > 255
-                || +verdad[i] < 0
-                || /^[0][0-9]{1,2}/.test(verdad[i]))
-                return false;
-        }
-        return true
-    }
-
-    const validar = () => {
-        if (comprobarIp(ip)) {
-            setModalVisible(!modalVisible);
-        } else {
-            Alert.alert('Error ❌', 'The IP is not valid', [
-                { text: 'OK' },
-            ]);
-        }
-    }
-
     return (
         <View style={styles.layout}>
             <View style={{ height: 20 }} />
@@ -99,7 +77,7 @@ export default function Login({ navigation }) {
 
                 <View
                     style={{
-                        marginBottom: 40,
+                        marginBottom: 30,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -117,35 +95,10 @@ export default function Login({ navigation }) {
                     <Image style={styles.image} source={logo} />
                 </View>
                 <View>
-                    <View style={{ height: 5 }} />
                     <Text style={styles.titulo}>InCube</Text>
-                    <View style={{ height: 10 }} />
                 </View>
             </View>
-            <View style={{ flex: 1 }}>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        setModalVisible(!modalVisible);
-                    }}>
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <Text style={styles.modalText}>Introduce una ID: </Text>
-                            <TextInput
-                                style={styles.txtI2}
-                                onChangeText={(text) => setIp(text)}
-                                placeholder="Introduce la ID           "
-                                underlineColor='transparent'
-                                theme={{ colors: { text: '', primary: '' } }}
-                            />
-                            <Button style={styles.button} onPress={validar}>
-                                Guardar
-                            </Button>
-                        </View>
-                    </View>
-                </Modal>
+            <View style={{ flex: 1, marginTop: 30 }}>
                 <TextInput
                     style={styles.width}
                     onChangeText={(newText) => setUser(newText)}
@@ -176,6 +129,65 @@ export default function Login({ navigation }) {
                     label="Password..."
                     placeholder="Write your password..."
                 />
+                <View style={styles.checkPolicy}>
+                    <View>
+                        <Checkbox
+                            status={checked ? 'checked' : 'unchecked'}
+                            color={'orange'}
+                            onPress={() => {
+                                setChecked(!checked);
+                            }}
+                        />
+                    </View>
+                    <Text
+                        style={styles.policy}
+                        onPress={() => {
+                            setShowModal(!showModal);
+                        }}>
+                        Privacy Policy
+                    </Text>
+                    <Modal
+                        animationType={'slide'}
+                        transparent={false}
+                        visible={showModal}
+                        onRequestClose={() => {
+                            console.log('Modal has been closed.');
+                        }}>
+                        <View style={styles.modal2}>
+                            <ScrollView>
+                                <Text style={styles.privacyTitle}>Privacy Policy:</Text>
+                                <Text style={styles.text}>
+                                    Effective date: 2023-02-10 Updated on: 2023-02-10 This Privacy
+                                    Policy explains the policies of InCube on the collection and
+                                    use of the information we collect when you access
+                                    https://www.InCube.com (the “Service”). This Privacy Policy
+                                    describes your privacy rights and how you are protected under
+                                    privacy laws. By using our Service, you are consenting to the
+                                    collection and use of your information in accordance with this
+                                    Privacy Policy. Please do not access or use our Service if you
+                                    do not consent to the collection and use of your information
+                                    as outlined in this Privacy Policy. This Privacy Policy has
+                                    been created with the help of CookieScript Privacy Policy
+                                    Generator. InCube is authorized to modify this Privacy Policy
+                                    at any time. This may occur without prior notice. InCube will
+                                    post the revised Privacy Policy on the https://www.InCube.com
+                                    website
+                                </Text>
+                                <Button
+                                    style={styles.button}
+                                    alignSelf="center"
+                                    mode="contained"
+                                    buttonColor="orange"
+                                    dark={true}
+                                    onPress={() => {
+                                        setShowModal(!showModal);
+                                    }}>
+                                    Close
+                                </Button>
+                            </ScrollView>
+                        </View>
+                    </Modal>
+                </View>
                 <View style={styles.botonesFinal}>
                     <Button
                         style={styles.buttonLogin}
@@ -186,21 +198,9 @@ export default function Login({ navigation }) {
                         onPress={() => {
                             login();
                             setPass("");
-
+                            
                         }}>
                         Enter
-                    </Button>
-                    <Button
-                        style={styles.buttonLogin}
-                        alignSelf="center"
-                        mode="contained"
-                        buttonColor='orange'
-                        dark={true}
-                        onPress={() => {
-                            setModalVisible(true)
-                        }}
-                    >
-                        IP
                     </Button>
                 </View>
             </View>
@@ -216,6 +216,65 @@ const styles = StyleSheet.create({
         padding: 8,
         backgroundColor: '#344955',
         textAlign: 'center',
+    },
+    policy: {
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        fontFamily: 'Century Gothic',
+        textDecorationLine: 'underline',
+    },
+    privacyTitle: {
+        color: 'white',
+        marginTop: 10,
+        fontSize: 25,
+        fontWeight: 'bold',
+        fontFamily: 'Century Gothic',
+        marginBottom: 20,
+    },
+    text: {
+        color: 'white',
+        marginTop: 10,
+        fontSize: 15,
+        fontWeight: 'bold',
+        fontFamily: 'Century Gothic',
+        marginBottom: 20,
+    },
+    modal: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#344955',
+        padding: 35,
+    },
+    modal2: {
+        flex: 1,
+        padding: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#344955',
+    },
+    privacyTitle: {
+        color: 'white',
+        marginTop: 10,
+        fontSize: 25,
+        fontWeight: 'bold',
+        fontFamily: 'Century Gothic',
+        marginBottom: 20,
+    },
+    text: {
+        color: 'white',
+        marginTop: 10,
+        fontSize: 15,
+        fontWeight: 'bold',
+        fontFamily: 'Century Gothic',
+        marginBottom: 20,
+    },
+    checkPolicy: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     botonesFinal: {
         flexDirection: 'row',
@@ -233,7 +292,7 @@ const styles = StyleSheet.create({
         height: 57,
         overflow: 'hidden',
         marginBottom: 20,
-        marginTop: 40
+        marginTop: 10
     },
     txtI2: {
         marginLeft: 24,
@@ -246,14 +305,7 @@ const styles = StyleSheet.create({
         borderColor: 'orange',
         height: 57,
         overflow: 'hidden',
-        marginBottom: 20,
-    },
-    buttonLogin: {
-        borderRadius: 30,
-        borderTopEndRadius: 30,
-        borderTopLeftRadius: 30,
-        borderWidth: 3,
-        borderColor: 'white',
+        marginBottom: 3,
     },
     titulo: {
         textAlign: 'center',
@@ -262,7 +314,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: 'Century Gothic',
         marginBottom: 20,
-
+        marginTop: 10
     },
     image: {
         width: 300,
@@ -353,32 +405,26 @@ const styles = StyleSheet.create({
         width: 350,
         position: 'absolute',
     },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 22,
-    },
-    modalView: {
-        margin: 20,
-        backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-    },
     button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2,
-        backgroundColor: 'orange'
+        borderRadius: 30,
+        borderTopEndRadius: 30,
+        borderTopLeftRadius: 30,
+        borderWidth: 2,
+        borderColor: 'black',
+        marginLeft: 15,
+        width: 130,
+        height: 50,
+        justifyContent: 'center',
+    },
+    buttonLogin: {
+        borderRadius: 30,
+        borderTopEndRadius: 30,
+        borderTopLeftRadius: 30,
+        borderWidth: 3,
+        borderColor: 'white',
+        width: 130,
+        height: 50,
+        margin: 5
     },
     buttonOpen: {
         backgroundColor: '#F194FF',
@@ -391,9 +437,5 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
-    modalText: {
-        marginBottom: 15,
-        textAlign: 'center',
-        fontSize: 20
-    },
+
 });

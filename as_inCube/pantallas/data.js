@@ -22,6 +22,48 @@ export default function Data(props) {
     ]);
   };
 
+  const getLight = async () => {
+    try {
+      const response = await fetch('http://54.198.123.240:5000/api?codigo=9');
+      if (response.ok) {
+        try {
+          const response2 = await fetch(
+            'http://54.198.123.240:5000/api/light?date=10-02-2023'
+          );
+          if (response2.ok) {
+            const dats = await response2.json();
+            setConsultaLuz(dats[dats.length - 1].level + " lm");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getTemp = async () => {
+    try {
+      const response = await fetch('http://54.198.123.240:5000/api?codigo=10');
+      if (response.ok) {
+        try {
+          const response2 = await fetch(
+            'http://54.198.123.240:5000/api/temperature?date=10-02-2023'
+          );
+          if (response2.ok) {
+            const dats = await response2.json();
+            setConsultaTemp(dats[dats.length - 1].temperature + " °C");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const intervalo = () => {
     if ((interval < 10) || (registro === '')) {
       Alert.alert('Error ❌', "Make sure the number of requests isn't empty and the interval is 10 or higher", [
@@ -46,33 +88,22 @@ export default function Data(props) {
     }
   };
 
-  const localizarNivel = () => {
-    let comprobar = '';
-    if (comprobar === '') {
-      setConsultaLuz('14');
-    } else {
-      Alert.alert(
-        'Error ❌',
-        'There is no record of light at the time ',
-        [{ text: 'OK' }]
-      );
-    }
-  };
+  const postApi = async () => {
+    let result = await fetch("http://54.198.123.240:5000/api/enviaIntervalo", {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'text/html',
+      },
 
-  const localizarNivelTemp = () => {
-    let comprobar = '';
-    if (comprobar === '') {
-      setConsultaTemp('12');
-    } else {
-      Alert.alert(
-        'Error ❌',
-        'There is no record of temperature at the time ',
-        [{ text: 'OK' }]
-      );
-    }
-  };
+      body: "intervalo" + ";" + "registros"
+    })
+      .then(response => checkStatus(response))
+      .then(response => response.json())
+      .catch(e => { throw e; });
 
-
+    return result;
+  }
 
   return (
     <SafeAreaView style={styles.layout}>
@@ -95,25 +126,36 @@ export default function Data(props) {
       </View>
       <View style={styles.bot}>
         <View style={styles.luz}>
-          <Text style={styles.titulo}>Actual light</Text>
+          <Text style={styles.titulo}>Current</Text>
+          <IconButton
+            style={styles.iconos2}
+            icon="lightbulb-variant-outline"
+            iconColor="white"
+            size={30}
+          />
           <Button
             style={styles.button}
             alignSelf="center"
             mode="contained"
             buttonColor="orange"
-            onPress={localizarNivel}>
+            onPress={getLight}>
             Show
           </Button>
         </View>
         <Text style={styles.titulo}>{consultaLuz}</Text>
         <View style={styles.luz}>
-          <Text style={styles.titulo}>Actual temperature</Text>
+          <Text style={styles.titulo}>Current</Text>
+          <IconButton
+            icon="thermometer"
+            iconColor="white"
+            size={30}
+          />
           <Button
             style={styles.button}
             alignSelf="center"
             mode="contained"
             buttonColor="orange"
-            onPress={localizarNivelTemp}>
+            onPress={getTemp}>
             Show
           </Button>
         </View>
@@ -145,6 +187,7 @@ export default function Data(props) {
             alignSelf="center"
             mode="contained"
             buttonColor="orange"
+            dark={true}
             onPress={() => { intervalo }}>
             Start
           </Button>
@@ -153,11 +196,12 @@ export default function Data(props) {
             alignSelf="center"
             mode="contained"
             buttonColor="orange"
+            dark={true}
             onPress={stop}>
             Stop
           </Button>
         </View>
-        <View>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <IconButton
             style={styles.bombilla}
             animated="true"
@@ -274,6 +318,7 @@ const styles = StyleSheet.create({
   izquierda: {
     flex: 1,
     justifyContent: 'flex-end',
+    alignItems: 'flex-end',
   },
   derecha: {
     flex: 1,

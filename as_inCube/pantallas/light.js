@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { TextInput, Button, IconButton, Provider as PaperProvider } from 'react-native-paper';
-import { StyleSheet, View, Text, SafeAreaView, Alert, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, SafeAreaView, Alert, Dimensions, Modal } from 'react-native';
 import CircularPicker from 'react-native-circular-picker';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import PantallasContext from '../components/PantallasContext';
 
 const screenWidth = Dimensions.get('window').width;
@@ -14,14 +14,19 @@ export default function Light(props) {
     const [consultaLuz, setConsultaLuz] = useState('');
     const [nivelLuz, setNivelLuz] = useState(0);
     const [horaLuz, setHoraLuz] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
     const arrNivelesLuz = [
         { hora: '16', luz: '3' },
         { hora: '11', luz: '7' },
     ];
 
+    useEffect(() => {
+        comprobarTutorial();
+      }, []);
+
     const exit = () => {
         Alert.alert('Log Out', 'Do you want to log out?', [
-            { text: 'Yes', onPress: () => { props.navigation.navigate('Login'); setUser(""); }},
+            { text: 'Yes', onPress: () => { props.navigation.navigate('Login'); setUser(""); } },
             { text: 'No' },
         ]);
     };
@@ -46,6 +51,27 @@ export default function Light(props) {
         }
     };
 
+    const comprobarTutorial = async () => {
+        let link = "http://54.198.123.240:5000/api/users?user=";
+        let url = link + user;
+        try {
+            const response = await fetch(url);
+            if (response.ok) {
+                if (!dats[0].bool) {
+                    setModalVisible(true);
+                } else {
+                    setModalVisible(false);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const denegarTutorial = async() => {
+
+    }
+
     return (
         <PaperProvider>
             <SafeAreaView style={styles.layout}>
@@ -67,6 +93,34 @@ export default function Light(props) {
                     </View>
                 </View>
                 <View style={styles.bot}>
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            setModalVisible(!modalVisible);
+                        }}>
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalText}>Introduce una ID: </Text>
+                                <TextInput
+                                    style={styles.txtI2}
+                                    onChangeText={(text) => setIp(text)}
+                                    placeholder="Introduce la ID           "
+                                    underlineColor='transparent'
+                                    theme={{ colors: { text: '', primary: '' } }}
+                                />
+                                <View>
+                                    <Button style={styles.button} onPress={() => setModalVisible(false)}>
+                                        Ok
+                                    </Button>
+                                    <Button style={styles.button}>
+                                        No volver a mostrar
+                                    </Button>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
                     <View style={styles.zona1}>
                         <Text style={styles.titulo}>Light</Text>
                         <Text style={styles.titulo}>Regulator</Text>
@@ -230,5 +284,31 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: 'white',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize: 20
     },
 });

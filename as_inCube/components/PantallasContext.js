@@ -4,10 +4,9 @@ const PantallasContext = createContext();
 
 export const PantallasProvider = ({ children }) => {
     const [user, setUser] = useState();
-    const [ip, setIp] = useState("");
     
     return (
-        <PantallasContext.Provider value ={{ user, setUser, ip, setIp }}>
+        <PantallasContext.Provider value ={{ user, setUser }}>
             {children}
         </PantallasContext.Provider>
         

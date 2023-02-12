@@ -15,8 +15,10 @@ export default function Config(props) {
     const [visiblePass1, setVisiblePass1] = useState(true);
     const [pass2, setPass2] = useState("");
     const [visiblePass2, setVisiblePass2] = useState(true);
+    const [nomUser, setNomUser] = useState("");
     const [eye1, setEye1] = useState('eye-outline');
     const [eye2, setEye2] = useState('eye-outline');
+    const [form, setForm] = useState(false);
 
 
     const onToggleSwitch = () => {
@@ -34,31 +36,68 @@ export default function Config(props) {
         ]);
     };
 
-    const changeVisible = () => {
+    const changeVisible1 = () => {
         if (visible === true) {
-            setVisible(false);
-            setEye('eye-off');
+            setVisiblePass1(false);
+            setEye1('eye-off');
         } else {
-            setVisible(true);
-            setEye('eye-outline');
+            setVisiblePass1(true);
+            setEye1('eye-outline');
         }
     };
 
+    const changeVisible2 = () => {
+        if (visible === true) {
+            setVisiblePass2(false);
+            setEye2('eye-off');
+        } else {
+            setVisiblePass2(true);
+            setEye2('eye-outline');
+        }
+    };
+
+    const verificarAdmin = () => {
+        if (user === "roberto") {
+            setForm(true);
+        } else {
+            Alert.alert(
+                //Ponerlo en ingles
+                'Error ❌',
+                'The ' + user + ' no tiene permiso para registrar a usuarios',
+                [{ text: 'OK' }]
+            );
+        }
+    }
+
     const postApi = async () => {
-        var result = await fetch("http://54.198.123.240:5000/api/enviarDatos", {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'text/html',
-            },
+        if (pass1 === pass2) {
+            let result = await fetch("http://54.198.123.240:5000/api/enviarDatos", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'text/html',
+                },
 
-            body: text1 + ";" + text2
-        })
-            .then(response => checkStatus(response))
-            .then(response => response.json())
-            .catch(e => { throw e; });
+                body: nomUser + ";" + pass1 + ";" + "false"
+            })
+                .then(response => checkStatus(response))
+                .then(response => response.json())
+                .catch(e => { throw e; });
 
-        return result;
+            Alert.alert(
+                'Registered 🧒 / 👩',
+                'The ' + nomUser + 'has been created',
+                [{ text: 'OK' }]
+            );
+
+            return result;
+        } else {
+            Alert.alert(
+                'Error ❌',
+                'The password is not same',
+                [{ text: 'OK' }]
+            );
+        }
     }
 
     return (
@@ -81,66 +120,74 @@ export default function Config(props) {
                 </View>
             </View>
             <View style={styles.bot}>
-                <View style={styles.viewTitulo}>
-                    <Text style={styles.titulo}>Developer mode </Text>
-                    <Switch
-                        value={isSwitchOn}
-                        onValueChange={onToggleSwitch}
-                        color="orange"
-                    />
-                    <Text style={styles.titulo}>{mode}</Text>
+                <View style={{ borderWidth: 5, borderColor: 'orange', borderRadius: 30 }}>
+                    <Text style={styles.titulo} onPress={verificarAdmin}>REGISTER</Text>
                 </View>
-                <View style={{ backgroundColor: 'green' }}>
-                <TextInput
-                    style={styles.width}
-                    onChangeText={(newText) => setUser(newText)}
-                    left={<TextInput.Icon icon="account" iconColor="#F8B52C" />}
-                    maxLength={20}
-                    value={user}
-                    underlineColor={'transparent'}
-                    theme={{ colors: { text: '', primary: '' } }}
-                    label="Username..."
-                    placeholder="Write your username..."
-                />
-                <TextInput
-                    style={styles.txtI2}
-                    onChangeText={(newText) => setPass1(newText)}
-                    left={<TextInput.Icon icon="lock" iconColor="#F8B52C" />}
-                    right={
-                        <TextInput.Icon
-                            icon={eye1}
-                            onPress={changeVisible}
-                            iconColor="#F8B52C"
+                {form && (
+                    <View>
+                        <TextInput
+                            style={styles.width}
+                            onChangeText={(newText) => setNomUser(newText)}
+                            left={<TextInput.Icon icon="account" iconColor="#F8B52C" />}
+                            maxLength={20}
+                            value={nomUser}
+                            underlineColor={'transparent'}
+                            theme={{ colors: { text: '', primary: '' } }}
+                            label="Username..."
+                            placeholder="Write your username..."
                         />
-                    }
-                    secureTextEntry={visiblePass1}
-                    maxLength={20}
-                    value={pass1}
-                    underlineColor={'transparent'}
-                    theme={{ colors: { text: '', primary: '' } }}
-                    label="Password..."
-                    placeholder="Write your password..."
-                />
-                <TextInput
-                    style={styles.txtI2}
-                    onChangeText={(newText) => setPass1(newText)}
-                    left={<TextInput.Icon icon="lock" iconColor="#F8B52C" />}
-                    right={
-                        <TextInput.Icon
-                            icon={eye1}
-                            onPress={changeVisible}
-                            iconColor="#F8B52C"
+                        <TextInput
+                            style={styles.txtI2}
+                            onChangeText={(newText) => setPass1(newText)}
+                            left={<TextInput.Icon icon="lock" iconColor="#F8B52C" />}
+                            right={
+                                <TextInput.Icon
+                                    icon={eye1}
+                                    onPress={changeVisible1}
+                                    iconColor="#F8B52C"
+                                />
+                            }
+                            secureTextEntry={visiblePass1}
+                            maxLength={20}
+                            value={pass1}
+                            underlineColor={'transparent'}
+                            theme={{ colors: { text: '', primary: '' } }}
+                            label="Password..."
+                            placeholder="Write your password..."
                         />
-                    }
-                    secureTextEntry={visiblePass1}
-                    maxLength={20}
-                    value={pass1}
-                    underlineColor={'transparent'}
-                    theme={{ colors: { text: '', primary: '' } }}
-                    label="Password..."
-                    placeholder="Write your password..."
-                />
-                </View>
+                        <TextInput
+                            style={styles.txtI2}
+                            onChangeText={(newText) => setPass2(newText)}
+                            left={<TextInput.Icon icon="lock" iconColor="#F8B52C" />}
+                            right={
+                                <TextInput.Icon
+                                    icon={eye2}
+                                    onPress={changeVisible2}
+                                    iconColor="#F8B52C"
+                                />
+                            }
+                            secureTextEntry={visiblePass2}
+                            maxLength={20}
+                            value={pass2}
+                            underlineColor={'transparent'}
+                            theme={{ colors: { text: '', primary: '' } }}
+                            label="Confirm password..."
+                            placeholder="Confirm your password..."
+                        />
+                        <View>
+                            <Button style={styles.button}
+                                alignSelf="center"
+                                mode="contained"
+                                buttonColor='orange'
+                                dark={true}
+                                onPress={postApi}
+                            >
+                                Save
+                            </Button>
+                        </View>
+                    </View>
+                )}
+
             </View>
         </SafeAreaView>
     );
@@ -152,8 +199,22 @@ const styles = StyleSheet.create({
         backgroundColor: '#3c525b',
     },
     viewTitulo: {
+        flex: 3,
         flexDirection: 'row',
         justifyContent: 'center',
+    },
+    button: {
+        borderRadius: 30,
+        borderTopEndRadius: 30,
+        borderTopLeftRadius: 30,
+        borderWidth: 2,
+        borderColor: 'black',
+        marginLeft: 15,
+        width: 130,
+        height: 50,
+        justifyContent: 'center',
+
+
     },
     txtI2: {
         marginLeft: 24,
@@ -217,9 +278,10 @@ const styles = StyleSheet.create({
     },
     titulo: {
         textAlign: 'center',
-        fontSize: 30,
+        fontSize: 35,
         fontWeight: 'bold',
         color: 'white',
         fontFamily: 'Candara',
+        margin: 10
     },
 });
