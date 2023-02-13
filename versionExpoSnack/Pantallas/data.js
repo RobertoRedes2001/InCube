@@ -295,9 +295,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  bombilla: {
-    
-  },
   izquierda: {
     flex: 1,
     justifyContent: 'flex-end',
