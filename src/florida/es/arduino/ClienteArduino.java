@@ -26,6 +26,9 @@ public class ClienteArduino {
 	// 8 - Luz Roja
 	// 9 - Leer luz
 	// 10 - Leer temperatura
+	
+	static int intervalo=5000;
+	static int registros=20;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -64,21 +67,25 @@ public class ClienteArduino {
 		while (true) {
 			String codigo = bf.readLine();
 			System.out.println("CLIENTE >>> " + codigo);
-			int codigoInstruccion = Integer.parseInt(codigo);
+			int codigoInstruccion = Integer.parseInt(codigo.split(";")[0]);
 			
 			if (codigoInstruccion == 11) {
-				int cont = 10;
+				intervalo = Integer.parseInt(codigo.split(";")[1]);
+				registros = Integer.parseInt(codigo.split(";")[2]);
+				int cont = registros;
+				System.out.println("CLIENTE >>> Iniciando Bucle de "+registros+" registros con un intervalo de "+intervalo+"ms");
 				while (cont>0) {
 					String respuestaArduinoUno = gestorArduino.gestionaInstruccion(9);
 					String respuestaArduinoDos = gestorArduino.gestionaInstruccion(10);
-					System.out.println("CLIENTE >>> Iniciando Bucle.");
+					
 					System.out.println(respuestaArduinoUno + " ; " + respuestaArduinoDos+" "+cont);
-					pw.write(respuestaArduinoUno + ";" + respuestaArduinoDos);
+					pw.write(respuestaArduinoUno+";"+respuestaArduinoDos+"\n");
 					pw.flush();
 					cont--;
-					Thread.sleep(5000);
+					Thread.sleep(intervalo);
 				}
-
+				System.out.println("CLIENTE >>>Bucle finalizado.");
+			
 			} else {
 				String respuestaArduino = gestorArduino.gestionaInstruccion(codigoInstruccion);
 				System.out.println("CLIENTE >>> " + respuestaArduino);
