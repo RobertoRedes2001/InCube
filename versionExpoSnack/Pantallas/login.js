@@ -1,16 +1,28 @@
 import * as React from 'react';
-import { TextInput, Button } from 'react-native-paper';
-import { StyleSheet, View, Text, Image, Alert } from 'react-native';
+import { TextInput, Button, Checkbox } from 'react-native-paper';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Alert,
+  Modal,
+  ScrollView,
+} from 'react-native';
 import { useContext, useState } from 'react';
 import PantallasContext from '../components/PantallasContext';
+import md5 from 'md5';
 
 export default function Login({ navigation }) {
   const logo = require('../components/logo.jpg');
   const { user, setUser } = useContext(PantallasContext);
-  const { ip, setIp } = useContext(PantallasContext);
   const [pass, setPass] = useState('');
   const [visible, setVisible] = useState(true);
   const [eye, setEye] = useState('eye-outline');
+  const [checked, setChecked] = useState(false);
+  const [showModal, setShowModal] = useState(true);
+  let nombre = '';
+  let password = '';
 
   const changeVisible = () => {
     if (visible === true) {
@@ -22,31 +34,44 @@ export default function Login({ navigation }) {
     }
   };
 
-  const handleOnChange = (nom, con) => {
-    if (user === nom) {
-      if (pass === con) {
-        return true;
+  const getUserApi = async () => {
+    let link = 'http://54.198.123.240:5000/api/users?user=';
+    let url = link + user;
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const dats = await response.json();
+        nombre += dats[0].user;
+        password += dats[0].pass;
+        console.log(nombre);
+        console.log(password);
+
+        if (user === nombre) {
+          if (md5(pass) === password) {
+            if (checked === true) {
+              return true;
+            }
+          }
+        } else {
+          return false;
+        }
+      } else {
+        Alert.alert('Error ❌', 'The name is incorrect', [{ text: 'OK' }]);
       }
-    } else {
-      return false;
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const login = () => {
-    if (handleOnChange('Rafa', '1234')) {
-      navigation.navigate('Home');
+    if (getUserApi()) {
+      navigation.navigate('Light');
     } else {
       Alert.alert('Error ❌', 'Make sure the information is correct', [
         { text: 'OK' },
       ]);
     }
   };
-
-  const introducirIP = () => {
-    const valor = prompt("Introduce la IP", "");
-
-    setIp(valor);
-  }
 
   return (
     <View style={styles.layout}>
@@ -74,26 +99,27 @@ export default function Login({ navigation }) {
         <View style={{ height: 10 }} />
         <Text style={styles.titulo}>InCube</Text>
         <View style={{ height: 10 }} />
+      </View> 
         <TextInput
           style={styles.width}
           onChangeText={(newText) => setUser(newText)}
-          left={<TextInput.Icon icon="account" color="#F8B52C" />}
+          left={<TextInput.Icon icon="account" color="orange" />}
           maxLength={20}
-          defaultValue={user}
+          value={user}
           underlineColor={'transparent'}
           theme={{ colors: { text: '', primary: '' } }}
           label="Username..."
           placeholder="Write your username..."
         />
         <TextInput
-          style={styles.width}
+          style={styles.txtI2}
           onChangeText={(newText) => setPass(newText)}
-          left={<TextInput.Icon icon="lock" color="#F8B52C" />}
+          left={<TextInput.Icon icon="lock" color="orange" />}
           right={
             <TextInput.Icon
               icon={eye}
               onPress={changeVisible}
-              color="#F8B52C"
+              color="orange"
             />
           }
           secureTextEntry={visible}
@@ -104,29 +130,79 @@ export default function Login({ navigation }) {
           label="Password..."
           placeholder="Write your password..."
         />
+        <View style={styles.checkPolicy}>
+          <View>
+            <Checkbox
+              status={checked ? 'checked' : 'unchecked'}
+              color={'orange'}
+              onPress={() => {
+                setChecked(!checked);
+              }}
+            />
+          </View>
+          <Text
+            style={styles.policy}
+            onPress={() => {
+              setShowModal(!showModal);
+            }}>
+            Privacy Policy
+          </Text>
+          <Modal
+            animationType={'slide'}
+            transparent={false}
+            visible={showModal}
+            onRequestClose={() => {
+              console.log('Modal has been closed.');
+            }}>
+            <View style={styles.modal2}>
+              <ScrollView>
+                <Text style={styles.privacyTitle}>Privacy Policy:</Text>
+                <Text style={styles.text}>
+                  Effective date: 2023-02-10 Updated on: 2023-02-10 This Privacy
+                  Policy explains the policies of InCube on the collection and
+                  use of the information we collect when you access
+                  https://www.InCube.com (the “Service”). This Privacy Policy
+                  describes your privacy rights and how you are protected under
+                  privacy laws. By using our Service, you are consenting to the
+                  collection and use of your information in accordance with this
+                  Privacy Policy. Please do not access or use our Service if you
+                  do not consent to the collection and use of your information
+                  as outlined in this Privacy Policy. This Privacy Policy has
+                  been created with the help of CookieScript Privacy Policy
+                  Generator. InCube is authorized to modify this Privacy Policy
+                  at any time. This may occur without prior notice. InCube will
+                  post the revised Privacy Policy on the https://www.InCube.com
+                  website
+                </Text>
+                <Button
+                  style={styles.button}
+                  alignSelf="center"
+                  mode="contained"
+                  buttonColor="orange"
+                  dark={true}
+                  onPress={() => {
+                    setShowModal(!showModal);
+                  }}>
+                  Close
+                </Button>
+              </ScrollView>
+            </View>
+          </Modal>
+        </View>
         <View style={styles.botonesFinal}>
           <Button
-            style={styles.button}
-            alignSelf="center"
+            style={styles.button2}        
             mode="contained"
-            color="orange"
+            buttonColor="orange"
             dark={true}
             onPress={() => {
               login();
+              setPass('');
             }}>
-            Enter
-          </Button>
-          <Button
-            style={styles.button}
-            alignSelf="center"
-            mode="contained"
-            color="orange"
-            dark={true}
-            onPress={introducirIP}>
-            IP   
+            <Text style={{textAlign:"center"}}>Login </Text>
           </Button>
         </View>
-      </View>
+      
     </View>
   );
 }
@@ -140,9 +216,69 @@ const styles = StyleSheet.create({
     backgroundColor: '#344955',
     textAlign: 'center',
   },
+  policy: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    fontFamily: 'Century Gothic',
+    textDecorationLine: 'underline',
+  },
+  privacyTitle: {
+    color: 'white',
+    marginTop: 10,
+    fontSize: 25,
+    fontWeight: 'bold',
+    fontFamily: 'Century Gothic',
+    marginBottom: 20,
+  },
+  text: {
+    color: 'white',
+    marginTop: 10,
+    fontSize: 15,
+    fontWeight: 'bold',
+    fontFamily: 'Century Gothic',
+    marginBottom: 20,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#344955',
+    padding: 35,
+  },
+  modal2: {
+    flex: 1,
+    padding: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#344955',
+  },
+  privacyTitle: {
+    color: 'white',
+    marginTop: 10,
+    fontSize: 25,
+    fontWeight: 'bold',
+    fontFamily: 'Century Gothic',
+    marginBottom: 20,
+  },
+  text: {
+    color: 'white',
+    marginTop: 10,
+    fontSize: 15,
+    fontWeight: 'bold',
+    fontFamily: 'Century Gothic',
+    marginBottom: 20,
+  },
+  checkPolicy: {
+    flex:0.4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   botonesFinal: {
     flexDirection: 'row',
-    justifyContent:'space-evenly'
+    justifyContent: 'space-evenly',
   },
   width: {
     marginLeft: 24,
@@ -156,13 +292,20 @@ const styles = StyleSheet.create({
     height: 57,
     overflow: 'hidden',
     marginBottom: 20,
+    marginTop: 10,
   },
-  button: {
+  txtI2: {
+    marginLeft: 24,
+    marginRight: 24,
+    fontSize: 18,
     borderRadius: 30,
     borderTopEndRadius: 30,
     borderTopLeftRadius: 30,
     borderWidth: 3,
-    borderColor: 'white',
+    borderColor: 'orange',
+    height: 57,
+    overflow: 'hidden',
+    marginBottom: 3,
   },
   titulo: {
     textAlign: 'center',
@@ -173,92 +316,137 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   image: {
-    width: 300,
-    height: 300,
+    width: 210,
+    height: 210,
     alignSelf: 'center',
-    borderRadius: 200,
+    borderRadius: 210 / 2,
     borderWidth: 3,
-    borderColor: 'rgba(248,181,44,1)',
+    borderColor: 'rgba(255,165,0,1)',
     elevation: 10,
   },
   fullcircle0: {
-    backgroundColor: 'rgba(248,181,44,0.45)',
-    borderRadius: 305 / 2,
+    backgroundColor: 'rgba(255,165,0,0.45)',
+    borderRadius: 215 / 2,
     borderColor: 'white',
-    height: 305,
-    width: 305,
+    height: 215,
+    width: 215,
     position: 'absolute',
   },
   fullcircle: {
-    backgroundColor: 'rgba(248,181,44,0.4)',
-    borderRadius: 310 / 2,
+    backgroundColor: 'rgba(255,165,0,0.4)',
+    borderRadius: 220 / 2,
     borderColor: 'white',
-    height: 310,
-    width: 310,
+    height: 220,
+    width: 220,
     position: 'absolute',
   },
   fullcircle05: {
-    backgroundColor: 'rgba(248,181,44,0.35)',
-    borderRadius: 315 / 2,
+    backgroundColor: 'rgba(255,165,0,0.35)',
+    borderRadius: 225 / 2,
     borderColor: 'white',
-    height: 315,
-    width: 315,
+    height: 225,
+    width: 225,
     position: 'absolute',
   },
   fullcircle1: {
-    backgroundColor: 'rgba(248,181,44,0.3)',
-    borderRadius: 320 / 2,
+    backgroundColor: 'rgba(255,165,0,0.3)',
+    borderRadius: 230 / 2,
     borderColor: 'white',
-    height: 320,
-    width: 320,
+    height: 230,
+    width: 230,
     position: 'absolute',
   },
   fullcircle15: {
-    backgroundColor: 'rgba(248,181,44,0.25)',
-    borderRadius: 325 / 2,
+    backgroundColor: 'rgba(255,165,0,0.25)',
+    borderRadius: 235 / 2,
     borderColor: 'white',
-    height: 325,
-    width: 325,
+    height: 235,
+    width: 235,
     position: 'absolute',
   },
   fullcircle2: {
-    backgroundColor: 'rgba(248,181,44,0.2)',
-    borderRadius: 330 / 2,
+    backgroundColor: 'rgba(255,165,0,0.2)',
+    borderRadius: 240 / 2,
     borderColor: 'white',
-    height: 330,
-    width: 330,
+    height: 240,
+    width: 240,
     position: 'absolute',
   },
   fullcircle25: {
-    backgroundColor: 'rgba(248,181,44,0.15)',
-    borderRadius: 335 / 2,
+    backgroundColor: 'rgba(255,165,0,0.15)',
+    borderRadius: 245 / 2,
     borderColor: 'white',
-    height: 335,
-    width: 335,
+    height: 245,
+    width: 245,
     position: 'absolute',
   },
   fullcircle3: {
-    backgroundColor: 'rgba(248,181,44,0.1)',
-    borderRadius: 340 / 2,
+    backgroundColor: 'rgba(255,165,0,0.1)',
+    borderRadius: 250 / 2,
     borderColor: 'white',
-    height: 340,
-    width: 340,
+    height: 250,
+    width: 250,
     position: 'absolute',
   },
   fullcircle35: {
-    backgroundColor: 'rgba(248,181,44,0.05)',
-    borderRadius: 345 / 2,
+    backgroundColor: 'rgba(255,165,0,0.05)',
+    borderRadius: 255 / 2,
     borderColor: 'white',
-    height: 345,
-    width: 345,
+    height: 255,
+    width: 255,
     position: 'absolute',
   },
   fullcircle40: {
-    backgroundColor: 'rgba(248,181,44,0.01)',
-    borderRadius: 350 / 2,
+    backgroundColor: 'rgba(255,165,0,0.01)',
+    borderRadius: 260 / 2,
     borderColor: 'white',
-    height: 350,
-    width: 350,
+    height: 260,
+    width: 260,
     position: 'absolute',
+  },
+  button: {
+    borderRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopLeftRadius: 30,
+    borderWidth: 2,
+    borderColor: 'black',
+    marginLeft: 15,
+    width: 130,
+    height: 50,
+    justifyContent: 'center',
+  },
+  button2: {
+    borderRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopLeftRadius: 30,
+    borderWidth: 2,
+    borderColor: 'white',
+    marginLeft: 15,
+    width: 130,
+    height: 50,
+    justifyContent: 'center',
+    backgroundColor:"orange"
+  },
+  buttonLogin: {
+    borderRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopLeftRadius: 30,
+    borderWidth: 3,
+    borderColor: 'white',
+    width: 130,
+    height: 50,
+    textAlign: "center",
+    backgroundColor:"orange"
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
