@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -34,24 +38,41 @@ public class GestorHTTP implements HttpHandler {
 	// 9 - leer luz
 	// 10 - leer temperatura
 	
-	GestorArduino gestorArduino;
 	static MongoClient mongoClient = null;
 	static MongoDatabase database = null;
 	static MongoCollection<Document> users = null;
 	static MongoCollection<Document> light = null;
 	static MongoCollection<Document> temperature = null;
 	static boolean resultado;
+	static Integer intervalo = 5000;
+	static Integer registros = 20;
+	Socket cliente = null;
+	InputStream is = null;
+	InputStreamReader isr = null;
+	BufferedReader bf = null;
+	PrintWriter pw = null;
 	
-	GestorHTTP(SerialPort chosenPort) {
+	GestorHTTP(Socket cliente) {
 		obrirConexio();
-		gestorArduino = new GestorArduino(chosenPort);
+		
+		this.cliente = cliente;
+		try {
+			this.is = cliente.getInputStream();
+			this.isr = new InputStreamReader(is);
+			this.bf = new BufferedReader(isr);
+			this.pw = new PrintWriter(cliente.getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 	
 	// Conexions
 	public static void obrirConexio() {
 		try {
-			mongoClient = new MongoClient("localhost", 27017);
+			mongoClient = new MongoClient("172.31.51.196", 27017);
 			database = mongoClient.getDatabase("InCube");
 			users = database.getCollection("users");
 			light = database.getCollection("light");
@@ -88,7 +109,11 @@ public class GestorHTTP implements HttpHandler {
 			System.out.println("GET");
 			requestParamValue = handleGetRequest(httpExchange);
 			handleGetResponse(httpExchange,requestParamValue); 
-		} else {
+		}else if ("POST".equalsIgnoreCase(httpExchange.getRequestMethod())) {
+			System.out.println("POST");
+			requestParamValue = handlePostRequest(httpExchange);
+			handlePostResponse(httpExchange, requestParamValue);
+		}else {
 			System.out.println("DESCONOCIDA");
 		}
 		
@@ -135,12 +160,34 @@ public class GestorHTTP implements HttpHandler {
 					return tipo+";"+httpExchange.getRequestURI().toString() ;
 				}
 			}
+			
 			default:
 				return tipo+";"+httpExchange.getRequestURI().toString() ;
 			}
 		}
 		
 		
+	}
+	
+	private String handlePostRequest(HttpExchange httpExchange) {
+		
+		System.out.println("Recibida URI tipo POST: " + httpExchange.getRequestBody().toString());
+		InputStream is = httpExchange.getRequestBody();
+		InputStreamReader isr = new InputStreamReader(is);
+		BufferedReader br = new BufferedReader(isr);
+		StringBuilder sb = new StringBuilder();
+		String line;
+		
+		try {
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(sb);
+		return sb.toString();
 	}
 	
 	//FIN BLOQUE REQUEST
@@ -151,19 +198,83 @@ public class GestorHTTP implements HttpHandler {
 	private void handleGetResponse(HttpExchange httpExchange, String requestParamValue)  throws  IOException {
 		
 		System.out.println("El servidor pasa a procesar la peticion GET: " + requestParamValue);
-		String[] arrayRespuestas = {"","","","", "","","","", "Medida luz: ","Medida temperatura (C): "};
 		
-		//Ejemplo de respuesta: el servidor devuelve al cliente un HTML simple:
+		System.out.println("OK");
+	
 		if(resultado) {
-			OutputStream outputStream = httpExchange.getResponseBody();
-			int codigoInstruccion = Integer.parseInt(requestParamValue);
-			String respuestaArduino = gestorArduino.gestionaInstruccion(codigoInstruccion);
-			String htmlResponse = "<html><body><h1>Codigo " + codigoInstruccion + " enviado a Arduino<br>Respuesta Arduino: " + arrayRespuestas[codigoInstruccion-1] + respuestaArduino + "</h1></body></html>";
-			httpExchange.sendResponseHeaders(200, htmlResponse.length());
-	        outputStream.write(htmlResponse.getBytes());
-	        outputStream.flush();
-	        outputStream.close();
-	        System.out.println("Devuelve respuesta HTML: " + htmlResponse);
+			String respuestaArduino = "";
+			int opcion = Integer.parseInt(requestParamValue);
+			if (opcion == 11) {
+				pw.write(opcion+";"+intervalo+";"+registros+"\n");
+				pw.flush();
+			}
+			else {
+			pw.write(opcion+"\n");
+			pw.flush();
+			}
+			if (opcion == 9 || opcion == 10) {
+				respuestaArduino = bf.readLine();
+				System.out.println("-->Respuesta Arduino: "+respuestaArduino+"\n-->Codigo Instruccion: "+opcion);
+				
+				if (opcion ==9) {
+					String timeStomp = new SimpleDateFormat("HH:mm").format(new java.util.Date());
+					String dateStomp = new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
+					Document insercion = new Document("level", respuestaArduino)
+							.append("date", dateStomp)
+							.append("register", timeStomp)
+							.append("user", "roberto");
+					light.insertOne(insercion);
+					System.out.println("Luz: "+respuestaArduino);
+				}
+				
+				else if (opcion == 10) {
+					String timeStomp = new SimpleDateFormat("HH:mm").format(new java.util.Date());
+					String dateStomp = new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
+					Document insercion = new Document("temperature", respuestaArduino)
+							.append("date", dateStomp)
+							.append("register", timeStomp)
+							.append("user", "roberto");
+					temperature.insertOne(insercion);
+					System.out.println("Temperatura: "+respuestaArduino);
+				}
+			}
+			
+			
+			else if (opcion == 11) {
+				
+				System.out.println("Hola");
+				
+				ArrayList<String> valores = new ArrayList<String>();
+				
+				while (bf.readLine() != "") {
+					String nuevoValor = bf.readLine();
+					valores.add(nuevoValor);
+					System.out.println("Ultimo registro: "+ nuevoValor+"\nCantidad de registros: "+valores.size());
+					
+					String lux = nuevoValor.split(";")[0];
+					String temp = nuevoValor.split(";")[1];
+					System.out.println("Insercion bucle "+nuevoValor);
+					
+					String timeStompL = new SimpleDateFormat("HH:mm").format(new java.util.Date());
+					String dateStompL = new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
+					Document insercionL = new Document("level", lux)
+							.append("date", dateStompL)
+							.append("register", timeStompL)
+							.append("user", "roberto");
+					light.insertOne(insercionL);
+					
+					String timeStompT = new SimpleDateFormat("HH:mm").format(new java.util.Date());
+					String dateStompT = new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
+					Document insercionT = new Document("temperature", temp)
+							.append("date", dateStompT)
+							.append("register", timeStompT)
+							.append("user", "roberto");
+					temperature.insertOne(insercionT);
+					
+				}
+			}
+			
+			
 		}else {
 			String response = buildJsonResponse(requestParamValue.split(";"));
 			System.out.println(response);
@@ -187,6 +298,57 @@ public class GestorHTTP implements HttpHandler {
         // hay un error se enviarian codigos del tipo 400, 401, 403, 404, etc.
         // https://developer.mozilla.org/es/docs/Web/HTTP/Status
         
+	}
+	private void handlePostResponse(HttpExchange httpExchange, String requestParamValue){
+
+		System.out.println("POST: " + requestParamValue);
+		
+		//httpExchange.sendResponseHeaders(204, -1);
+
+		// TODO: a partir de aqui todas las operaciones que se quieran programar en el
+		// servidor cuando recibe
+		// una peticion POST (ejemplo: insertar en una base de datos lo que nos envia el
+		// cliente en requestParamValue)
+		
+		String userNew = requestParamValue.split(",")[0];
+		String passNew = requestParamValue.split(",")[1];
+		
+		try {
+			intervalo = Integer.parseInt(userNew);
+			registros = Integer.parseInt(passNew);
+		} catch (NumberFormatException excepcion) {
+			if (passNew.equals("true")||passNew.equals("false")) {
+				
+				if (passNew.equals("true")) {
+					System.out.println("ModificaBoolUser"+userNew);
+					
+					users.updateOne(eq("user", userNew), new Document("$set",
+						new Document("bool", "true")));
+				}
+				if (passNew.equals("false")) {
+			
+				System.out.println("ModificaBoolUser"+userNew);
+			
+				users.updateOne(eq("user", userNew), new Document("$set",
+					new Document("bool", "false")));
+				}
+				else {
+					
+					
+					System.out.println("NUEVOUSUARIO"+userNew+"__"+passNew);
+					
+					Document insercion = new Document("user",userNew)
+							.append("pass",passNew)
+							.append("bool","true");
+					users.insertOne(insercion);
+					
+					}
+				}
+			}
+		
+		
+		
+		
 	}
 	
 	private String buildJsonResponse(String[] data) {
