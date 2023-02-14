@@ -15,20 +15,14 @@ export default function Config(props) {
     const [visiblePass1, setVisiblePass1] = useState(true);
     const [pass2, setPass2] = useState("");
     const [visiblePass2, setVisiblePass2] = useState(true);
-    const [nomUser, setNomUser] = useState("");
+    const [nameUser, setNameUser] = useState("");
     const [eye1, setEye1] = useState('eye-outline');
     const [eye2, setEye2] = useState('eye-outline');
     const [form, setForm] = useState(false);
 
-
-    const onToggleSwitch = () => {
-        setIsSwitchOn(!isSwitchOn);
-        if (isSwitchOn === false) {
-            setMode(' On ');
-        } else {
-            setMode(' Off');
-        }
-    };
+    /**
+    * If we click on yes we will navigate to the login screen
+    */
     const exit = () => {
         Alert.alert('Log Out', 'Do you want to log out?', [
             { text: 'Yes', onPress: () => { props.navigation.navigate('Login'); setUser(""); } },
@@ -36,6 +30,9 @@ export default function Config(props) {
         ]);
     };
 
+    /**
+     * Podemos ver la contraseña que se ha escrito con letras
+     */
     const changeVisible1 = () => {
         if (visible === true) {
             setVisiblePass1(false);
@@ -46,6 +43,9 @@ export default function Config(props) {
         }
     };
 
+    /**
+     * Podemos ver la contraseña que se ha escrito con letras
+     */
     const changeVisible2 = () => {
         if (visible === true) {
             setVisiblePass2(false);
@@ -56,29 +56,37 @@ export default function Config(props) {
         }
     };
 
-    const verificarAdmin = () => {
+    /**
+     * If the user who has logged in is Roberto, when you click on Register, 
+     * a form will appear with which you can register people
+     */
+    const verifyAdmin = () => {
         if (user === "roberto") {
             setForm(true);
         } else {
             Alert.alert(
                 //Ponerlo en ingles
                 'Error ❌',
-                'The ' + user + ' no tiene permiso para registrar a usuarios',
+                user + ' does not have permission to register users',
                 [{ text: 'OK' }]
             );
         }
     }
 
+    /**
+     * We make a request to the api to store the user and the login in the database
+     * @returns 
+     */
     const postApi = async () => {
         if (pass1 === pass2) {
-            let result = await fetch("http://54.198.123.240:5000/api/enviarDatos", {
+            let result = await fetch("http://54.198.123.240:5000/api/enviaDatos", {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'text/html',
                 },
 
-                body: nomUser + ";" + pass1 + ";" + "false"
+                body: nameUser + ";" + pass1 + ";" + "false"
             })
                 .then(response => checkStatus(response))
                 .then(response => response.json())
@@ -86,7 +94,7 @@ export default function Config(props) {
 
             Alert.alert(
                 'Registered 🧒 / 👩',
-                'The ' + nomUser + 'has been created',
+                'The ' + nameUser + 'has been created',
                 [{ text: 'OK' }]
             );
 
@@ -103,14 +111,14 @@ export default function Config(props) {
     return (
         <SafeAreaView style={styles.layout}>
             <View style={styles.top}>
-                <View style={styles.izquierda}>
-                    <View style={styles.izquierda}>
-                        <Text style={styles.textoUser}> Hello {user}, Welcome</Text>
+                <View style={styles.left}>
+                    <View style={styles.left}>
+                        <Text style={styles.textUser}> Hello {user}, Welcome</Text>
                     </View>
                 </View>
-                <View style={styles.derecha}>
+                <View style={styles.right}>
                     <IconButton
-                        style={styles.iconos}
+                        style={styles.icon}
                         alignSelf="center"
                         icon="exit-to-app"
                         iconColor="white"
@@ -121,16 +129,16 @@ export default function Config(props) {
             </View>
             <View style={styles.bot}>
                 <View style={{ borderWidth: 5, borderColor: 'orange', borderRadius: 30 }}>
-                    <Text style={styles.titulo} onPress={verificarAdmin}>REGISTER</Text>
+                    <Text style={styles.title} onPress={verifyAdmin}>REGISTER</Text>
                 </View>
                 {form && (
                     <View>
                         <TextInput
                             style={styles.width}
-                            onChangeText={(newText) => setNomUser(newText)}
+                            onChangeText={(newText) => setNameUser(newText)}
                             left={<TextInput.Icon icon="account" iconColor="#F8B52C" />}
                             maxLength={20}
-                            value={nomUser}
+                            value={nameUser}
                             underlineColor={'transparent'}
                             theme={{ colors: { text: '', primary: '' } }}
                             label="Username..."
@@ -213,8 +221,6 @@ const styles = StyleSheet.create({
         width: 130,
         height: 50,
         justifyContent: 'center',
-
-
     },
     txtI2: {
         marginLeft: 24,
@@ -243,7 +249,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginTop: 40
     },
-    textoUser: {
+    textUser: {
         color: 'white',
         fontWeight: 'bold',
         marginBottom: 10,
@@ -263,20 +269,20 @@ const styles = StyleSheet.create({
         borderBottomColor: 'white',
         borderBottomWidth: 2,
     },
-    iconos: {
+    icon: {
         marginBottom: -4,
         marginRight: -1,
     },
-    izquierda: {
+    left: {
         flex: 1,
         justifyContent: 'flex-end',
     },
-    derecha: {
+    right: {
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
     },
-    titulo: {
+    title: {
         textAlign: 'center',
         fontSize: 35,
         fontWeight: 'bold',

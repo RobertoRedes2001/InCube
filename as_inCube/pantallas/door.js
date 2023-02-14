@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, SafeAreaView, Alert, Dimensions } from 'react-n
 import { IconButton } from 'react-native-paper';
 import { useContext, useState } from 'react';
 import PantallasContext from '../components/PantallasContext';
+import { white } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -11,8 +12,13 @@ export default function Door(props) {
   const { user, setUser } = useContext(PantallasContext);
   const [door, setDoor] = useState('garage-variant');
   const [open, setOpen] = useState('Door Closed');
-  const [boton, setBoton] = useState('Open');
-  const [estadoPuerta, setEstadoPuerta] = useState(false);
+  const [buttonDoor, setButtonDoor] = useState('Open');
+  const [colorIcon, setColorIcon] = useState('white');
+  const [doorStatus, setDoorStatus] = useState(false);
+
+  /**
+    * If we click on yes we will navigate to the login screen
+  */
   const exit = () => {
     Alert.alert('Log Out', 'Do you want to log out?', [
       { text: 'Yes', onPress: () => { props.navigation.navigate('Login'); setUser(""); } },
@@ -20,12 +26,16 @@ export default function Door(props) {
     ]);
   };
 
+  /**
+   * If we click on the door icon, the icon changes, the color changes 
+   * and a request is sent to the api for the motor to rotate
+   */
   const abrir = async () => {
     if (door === 'garage-variant') {
       setDoor('garage-open-variant');
       setOpen('Door Opened');
-      setBoton('Close');
-      setEstadoPuerta(!estadoPuerta);
+      setColorIcon('orange');
+      setDoorStatus(!doorStatus);
       try {
         const response = await fetch("http://54.198.123.240:5000/api?codigo=3");
         if (response.ok) {
@@ -39,8 +49,8 @@ export default function Door(props) {
     } else {
       setDoor('garage-variant');
       setOpen('Door Closed');
-      setBoton('Open');
-      setEstadoPuerta(!estadoPuerta);
+      setColorIcon('white');
+      setDoorStatus(!doorStatus);
       try {
         const response = await fetch("http://54.198.123.240:5000/api?codigo=4");
         if (response.ok) {
@@ -52,41 +62,41 @@ export default function Door(props) {
         console.log(error + " puerta");
       }
     }
-    console.log(estadoPuerta)
+    console.log(doorStatus)
   };
 
   return (
     <SafeAreaView style={styles.layout}>
       <View style={styles.top}>
-        <View style={styles.izquierda}>
-          <View style={styles.izquierda}>
-            <Text style={styles.textoUser}> Hello {user}, Welcome</Text>
+        <View style={styles.left}>
+          <View style={styles.left}>
+            <Text style={styles.textUser}> Hello {user}, Welcome</Text>
           </View>
         </View>
-        <View style={styles.derecha}>
+        <View style={styles.right}>
           <IconButton
-            style={styles.iconos}
+            style={styles.icons}
             alignSelf="center"
             icon="exit-to-app"
-            iconColor="white"
+            iconColor='white'
             size={35}
             onPress={exit}
           />
         </View>
       </View>
       <View style={styles.bot}>
-        <View style={styles.contenido}>
-          <Text style={styles.titulo}>Open/Close</Text>
-          <View style={styles.icono}>
+        <View style={styles.content}>
+          <Text style={styles.title}>Open/Close</Text>
+          <View style={styles.icon}>
             <IconButton
               animated='true'
-              style={styles.iconos}
+              style={styles.icons}
               icon={door}
-              iconColor={'white'}
+              iconColor={colorIcon}
               size={100}
               onPress={abrir}
             />
-            <Text style={styles.titulo}>{open}</Text>
+            <Text style={styles.title}>{open}</Text>
           </View>
         </View>
       </View>
@@ -103,19 +113,19 @@ const styles = StyleSheet.create({
   bot: {
     flex: 4,
   },
-  contenido: {
+  content: {
     marginTop: 60,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textoUser: {
+  textUser: {
     color: 'white',
     fontWeight: 'bold',
     marginBottom: 10,
     marginLeft: 10,
     fontSize: 20
   },
-  icono: {
+  icon: {
     marginTop: 40,
     justifyContent: 'center',
     alignItems: 'center',
@@ -131,20 +141,20 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     borderBottomWidth: 2,
   },
-  iconos: {
+  icons: {
     marginBottom: -4,
     marginRight: -1,
   },
-  izquierda: {
+  left: {
     flex: 1,
     justifyContent: 'flex-end',
   },
-  derecha: {
+  right: {
     flex: 1,
     justifyContent: 'flex-end',
-    alignItems: 'flex-end',
+    alignItems: 'flex-end'
   },
-  titulo: {
+  title: {
     marginTop: 40,
     textAlign: 'center',
     fontSize: 50,

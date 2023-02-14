@@ -15,15 +15,10 @@ export default function Light(props) {
     const [nivelLuz, setNivelLuz] = useState(0);
     const [horaLuz, setHoraLuz] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
-    const arrNivelesLuz = [
-        { hora: '16', luz: '3' },
-        { hora: '11', luz: '7' },
-    ];
 
-    useEffect(() => {
-        comprobarTutorial();
-      }, []);
-
+    /**
+     * If we click on yes we will navigate to the login screen
+     */
     const exit = () => {
         Alert.alert('Log Out', 'Do you want to log out?', [
             { text: 'Yes', onPress: () => { props.navigation.navigate('Login'); setUser(""); } },
@@ -31,59 +26,61 @@ export default function Light(props) {
         ]);
     };
 
-    const localizarNivel = () => {
-        let registro = '';
-
-        for (let i = 0; i < arrNivelesLuz.length; i++) {
-            if (arrNivelesLuz[i].hora === horaLuz) {
-                registro += arrNivelesLuz[i].luz;
-            }
-        }
-
-        if (registro !== '') {
-            setConsultaLuz(registro);
-        } else {
-            Alert.alert(
-                'Error ❌',
-                'There is no record of light at the time ' + horaLuz,
-                [{ text: 'OK' }]
-            );
-        }
-    };
-
-    const comprobarTutorial = async () => {
-        let link = "http://54.198.123.240:5000/api/users?user=";
-        let url = link + user;
+    /**
+     * Depending on the number of the circular picker, it will 
+     * make an api query so that the led on the arduino changes color
+     */
+    const colorLuz = async () => {
         try {
-            const response = await fetch(url);
-            if (response.ok) {
-                if (!dats[0].bool) {
-                    setModalVisible(true);
-                } else {
-                    setModalVisible(false);
+            if (nivelLuz >= 0 && nivelLuz <= 70) {
+                const response = await fetch('http://54.198.123.240:5000/api?codigo=5');
+                if (response.ok) {
+                    Alert.alert('Light 💡', 'The light is BLUE, you should increase the power', [
+                        { text: 'OK' },
+                      ]);
+                }
+            } else if (nivelLuz >= 71 && nivelLuz <= 95) {
+                const response = await fetch('http://54.198.123.240:5000/api?codigo=6');
+                if (response.ok) {
+                    Alert.alert('Light 💡', 'The light is YELLOW', [
+                        { text: 'OK' },
+                      ]);
+                }
+            } else if (nivelLuz >= 96 && nivelLuz <= 125) {
+                const response = await fetch('http://54.198.123.240:5000/api?codigo=7');
+                if (response.ok) {
+                    Alert.alert('Light 💡', 'The light is ORANGE', [
+                        { text: 'OK' },
+                      ]);
+                }
+            } else {
+                const response = await fetch('http://54.198.123.240:5000/api?codigo=8');
+                if (response.ok) {
+                    Alert.alert('Light 💡', 'The light is RED, you should reduce the power', [
+                        { text: 'OK' },
+                      ]);
                 }
             }
+            Alert.alert('Light 💡', 'The door is closing', [
+                { text: 'OK' },
+              ]);
         } catch (error) {
             console.log(error);
         }
-    }
-
-    const denegarTutorial = async() => {
-
-    }
+    };
 
     return (
         <PaperProvider>
             <SafeAreaView style={styles.layout}>
                 <View style={styles.top}>
-                    <View style={styles.izquierda}>
-                        <View style={styles.izquierda}>
-                            <Text style={styles.textoUser}> Hello {user}, Welcome</Text>
+                    <View style={styles.left}>
+                        <View style={styles.left}>
+                            <Text style={styles.textUser}> Hello {user}, Welcome</Text>
                         </View>
                     </View>
-                    <View style={styles.derecha}>
+                    <View style={styles.right}>
                         <IconButton
-                            style={styles.iconos}
+                            style={styles.icons}
                             alignSelf="center"
                             icon="exit-to-app"
                             iconColor="white"
@@ -93,40 +90,13 @@ export default function Light(props) {
                     </View>
                 </View>
                 <View style={styles.bot}>
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            setModalVisible(!modalVisible);
-                        }}>
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <Text style={styles.modalText}>Introduce una ID: </Text>
-                                <TextInput
-                                    style={styles.txtI2}
-                                    onChangeText={(text) => setIp(text)}
-                                    placeholder="Introduce la ID           "
-                                    underlineColor='transparent'
-                                    theme={{ colors: { text: '', primary: '' } }}
-                                />
-                                <View>
-                                    <Button style={styles.button} onPress={() => setModalVisible(false)}>
-                                        Ok
-                                    </Button>
-                                    <Button style={styles.button}>
-                                        No volver a mostrar
-                                    </Button>
-                                </View>
-                            </View>
-                        </View>
-                    </Modal>
-                    <View style={styles.zona1}>
-                        <Text style={styles.titulo}>Light</Text>
-                        <Text style={styles.titulo}>Regulator</Text>
-                        <View style={styles.separacion}>
+
+                    <View style={styles.zone1}>
+                        <Text style={styles.title}>Light</Text>
+                        <Text style={styles.title}>Regulator</Text>
+                        <View style={styles.separation}>
                             <CircularPicker
-                                size={200}
+                                size={240}
                                 steps={[20, 45, 75, 100]}
                                 gradients={{
                                     0: ['rgb(0, 122, 255)', 'rgb(0, 122, 255)'],
@@ -136,40 +106,17 @@ export default function Light(props) {
                                 }}
                                 onChange={handleChange}>
                                 <>
-                                    <Text style={styles.grados}>{nivelLuz}</Text>
+                                    <Text style={styles.degrees}>{nivelLuz}</Text>
                                 </>
                             </CircularPicker>
-                        </View>
-                    </View>
-                    <View style={styles.zona2}>
-                        <View style={styles.viewNum}>
-                            <Text style={styles.text}>
-                                Introduce an hour to{'\n'}
-                                see the light level:
-                            </Text>
-                            <View>
-                                <TextInput
-                                    style={styles.width}
-                                    keyboardType="numeric"
-                                    maxLength={20}
-                                    value={horaLuz}
-                                    onChangeText={(newText) => setHoraLuz(newText)}
-                                    underlineColor={'transparent'}
-                                    theme={{ colors: { text: '', primary: '' } }}
-                                    placeholder="Write an hour"
-                                />
-                                <Button
-                                    style={styles.button}
-                                    alignSelf="center"
-                                    mode="contained"
-                                    buttonColor="orange"
-                                    onPress={localizarNivel}>
-                                    Show
-                                </Button>
-                            </View>
-                        </View>
-                        <View style={styles.viewLevel}>
-                            <Text style={styles.textLevel}>{consultaLuz}</Text>
+                            <Button
+                                style={styles.button}
+                                alignSelf="center"
+                                mode="contained"
+                                buttonColor="orange"
+                                onPress={colorLuz}>
+                                Send
+                            </Button>
                         </View>
                     </View>
                 </View>
@@ -183,17 +130,14 @@ const styles = StyleSheet.create({
         flex: 5,
         backgroundColor: '#3c525b',
     },
-    zona1: {
+    zone1: {
         flex: 1.5,
         justifyContent: 'center',
-    },
-    zona2: {
-        flex: 1,
     },
     bot: {
         flex: 4,
     },
-    textoUser: {
+    textUser: {
         color: 'white',
         fontWeight: 'bold',
         marginBottom: 10,
@@ -218,8 +162,12 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         borderTopEndRadius: 30,
         borderTopLeftRadius: 30,
-        borderColor: 'black',
         borderWidth: 2,
+        borderColor: 'black',
+        marginTop: 30,
+        width: 130,
+        height: 50,
+        justifyContent: 'center',
     },
     viewLevel: {
         flexDirection: 'row',
@@ -232,7 +180,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
     },
-    separacion: {
+    separation: {
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -247,13 +195,13 @@ const styles = StyleSheet.create({
         borderBottomColor: 'white',
         borderBottomWidth: 2,
     },
-    grados: {
+    degrees: {
         textAlign: 'center',
-        fontSize: 20,
+        fontSize: 35,
         fontWeight: 'bold',
         color: 'white',
     },
-    iconos: {
+    icons: {
         marginBottom: -4,
         marginRight: -1,
     },
@@ -262,16 +210,16 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly',
         flex: 1,
     },
-    izquierda: {
+    left: {
         flex: 1,
         justifyContent: 'flex-end',
     },
-    derecha: {
+    right: {
         flex: 1,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
     },
-    titulo: {
+    title: {
         textAlign: 'center',
         fontSize: 35,
         fontWeight: 'bold',
