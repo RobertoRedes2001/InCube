@@ -6,15 +6,15 @@ import { IconButton, Button, DataTable, RadioButton } from 'react-native-paper';
 import { StyleSheet, View, SafeAreaView, Alert, TextInput } from 'react-native';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
-import { Table, TableWrapper, Row, Cell } from 'react-native-table-component';
+
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const Charts = (props) => {
   const { user, setUser } = useContext(PantallasContext);
-  const [fecha, setFecha] = React.useState('');
-  const [fechaIm, setFechaIm] = React.useState('');
+  const [date, setDate] = React.useState('');
+  const [dateIm, setDateIm] = React.useState('');
   const [light, setLight] = React.useState(0);
   const [int, setInt] = React.useState(0);
   const [temperature, setTemperature] = React.useState(0);
@@ -23,9 +23,10 @@ const Charts = (props) => {
   const [checked, setChecked] = React.useState('light');
   const [labels, setLabels] = React.useState([]);
   const [datasets, setDatasets] = React.useState([0]);
+
   let lab = [];
   let datas = [];
-  let totaLuz = 0
+  let totalLight = 0
   let totalTemp = 0
   
 
@@ -41,17 +42,17 @@ const Charts = (props) => {
   const getUserApi = async () => {
     try {
       const response = await fetch(
-        'http://54.198.123.240:5000/api/' + checked + '?date=' + fechaIm
+        'http://54.198.123.240:5000/api/' + checked + '?date=' + dateIm
       );
       if (response.ok) {
         const dats = await response.json();
         if(dats[0] == null){
           alert("There is no values to show for the introduced date")
         }else{
-        setFecha(fechaIm);
+        setDate(dateIm);
         setDatasets([]);
         setLabels([]);
-        if(fechaIm != fecha){
+        if(dateIm != date){
         setLight(0);
         setTemperature(0);
         }
@@ -60,7 +61,7 @@ const Charts = (props) => {
             
             datas.push(dats[i].level);
             lab.push(dats[i].register);
-            totaLuz+=parseInt(dats[i].level)
+            totalLight+=parseInt(dats[i].level)
              
           } else {
             datas.push(dats[i].temperature);
@@ -72,7 +73,7 @@ const Charts = (props) => {
         if(totalTemp != 0){
         setTemperature(Math.trunc(totalTemp / 7))
         }else{
-        setLight(Math.trunc(totaLuz / 7))
+        setLight(Math.trunc(totalLight / 7))
         }
         setDatasets(datas)
         setLabels(lab)
@@ -98,10 +99,10 @@ const Charts = (props) => {
     
     <SafeAreaView style={styles.layout}>
       <View style={styles.top}>
-        <View style={styles.izquierda}>
-          <Text style={styles.textoUser}> Hola {user} , Bienvenido</Text>
+        <View style={styles.left}>
+          <Text style={styles.textuser}> Hi {user} , Welcome</Text>
         </View>
-        <View style={styles.derecha}>
+        <View style={styles.righ}>
           <IconButton
             style={styles.buttonBack}
             alignSelf="center"
@@ -147,7 +148,7 @@ const Charts = (props) => {
                 borderRightWidth: 3,
                 borderColor: 'rgba(255,165,0,0.8)',
               }}>
-              <Text style={{ color: 'white' }}>{fecha}</Text>
+              <Text style={{ color: 'white' }}>{date}</Text>
             </DataTable.Cell>
             <DataTable.Cell numeric>
               <Text style={{ color: 'white' }}>{light} lm</Text>
@@ -178,7 +179,7 @@ const Charts = (props) => {
             underlineColor={'transparent'}
             theme={{ colors: { text: '', primary: '' } }}
             placeholder="00-00-0000"
-            onChangeText={(text) => setFechaIm(text)}
+            onChangeText={(text) => setDateIm(text)}
           />
           <Text
             style={{
@@ -224,7 +225,7 @@ const Charts = (props) => {
             alignItems: 'center',
             marginTop: -30,
           }}>
-          <Text style={styles.textoReg}> Registros {fecha} </Text>
+          <Text style={styles.textReg}> Records {date} </Text>
         </View>
         <View
           style={{ flex: 9, justifyContent: 'center', alignItems: 'center' }}>
@@ -233,7 +234,7 @@ const Charts = (props) => {
             width={Dimensions.get('window').width} // from react-native
             height={350}
             yAxisLabel=""
-            yAxisSuffix=" lm"
+            yAxisSuffix=""
             yAxisInterval={1} // optional, defaults to 1
             chartConfig={{
               backgroundColor: 'white',
@@ -256,8 +257,6 @@ const Charts = (props) => {
               marginVertical: 8,
               borderRadius: 16,
               marginRight: 20,
-              position:"absoute",
-              
             }}
           />
         </View>
@@ -287,7 +286,6 @@ const styles = StyleSheet.create({
   top: {
     flexDirection: 'row',
     backgroundColor: 'orange',
-    flex: 0.5,
     height: screenHeight / 10,
     width: screenWidth,
     borderBottomColor: 'white',
@@ -297,23 +295,23 @@ const styles = StyleSheet.create({
   bot: {
     flex: 4,
   },
-  izquierda: {
+  left: {
     flex: 1,
     justifyContent: 'flex-end',
   },
-  derecha: {
+  righ: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
   },
-  textoUser: {
+  textuser: {
     color: 'white',
     fontWeight: 'bold',
     marginBottom: 10,
     marginLeft: 10,
     fontFamily: 'Century Gothic',
   },
-  textoReg: {
+  textReg: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 22,
