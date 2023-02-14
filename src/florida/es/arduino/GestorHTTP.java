@@ -38,6 +38,19 @@ public class GestorHTTP implements HttpHandler {
 	// 9 - leer luz
 	// 10 - leer temperatura
 	
+	/**
+	 * @param MongoClient
+	 * @param MongoDatabase
+	 * @param MongoCollection<Document>
+	 * @param boolean
+	 * @param Integer
+	 * @param Socket
+	 * @param InputStream
+	 * @param InputStreamReader
+	 * @param BufferedReader
+	 * @param PrintWriter
+	 * We create the static parameters that will be needed in order to run the API. 
+	 */
 	static MongoClient mongoClient = null;
 	static MongoDatabase database = null;
 	static MongoCollection<Document> users = null;
@@ -69,7 +82,7 @@ public class GestorHTTP implements HttpHandler {
 	}
 	
 	
-	// Conexions
+	// Opening the connection with the MongoDB Database
 	public static void obrirConexio() {
 		try {
 			mongoClient = new MongoClient("172.31.51.196", 27017);
@@ -82,7 +95,8 @@ public class GestorHTTP implements HttpHandler {
 			e.printStackTrace();
 		}
 	}
-
+	
+	// Closing the connection with the MongoDB Database
 	public static void tancarConexio() {
 		try {
 			mongoClient.close();
@@ -91,7 +105,12 @@ public class GestorHTTP implements HttpHandler {
 		}
 	}
 	
-	@Override    
+	/**
+	 * @param httpExchange
+	 * @param IOException
+	 * @return
+	 */
+	@Override  
 	public void handle(HttpExchange httpExchange) throws IOException {
 		
 		//Habilitar accesos CORS (intercambio de recursos de origen cruzado) para peticiones POST, PUT y DELETE
@@ -122,14 +141,32 @@ public class GestorHTTP implements HttpHandler {
 	
 	//INICIO BLOQUE REQUEST
 	
-	
+	/**
+	 * 
+	 * @param httpExchange
+	 * @return
+	 */
 	private String handleGetRequest(HttpExchange httpExchange) {
-		System.out.println("Recibida URI tipo GET: " + httpExchange.getRequestURI().toString().split("=")[1]);
+		//Checking the URI of the GET
+		System.out.println("Received URI type GET: " + httpExchange.getRequestURI().toString().split("=")[1]);
 		try {
+			/**
+			 * @param Integer Parsed
+			 * @param Boolean
+			 * @return String
+			 * In case the petition is numeric we generate a Arduino code petition and return it
+			 */
 			Integer.parseInt(httpExchange.getRequestURI().toString().split("=")[1]);
 			resultado = true;
 			return httpExchange.getRequestURI().toString().split("\\?")[1].split("=")[1].toString();
 		} catch (NumberFormatException excepcion) {
+			/**
+			 * @param Boolean
+			 * @param String
+			 * @return String
+			 * In case the petition is not a number, we send it to a switch and then filter 
+			 * in order of the type of the petition.
+			 */
 			resultado = false;
 			String tipo = httpExchange.getRequestURI().toString().split("/")[2].split("\\?")[0];
 			switch (tipo) {
@@ -169,9 +206,14 @@ public class GestorHTTP implements HttpHandler {
 		
 	}
 	
+	/**
+	 * 
+	 * @param httpExchange
+	 * @return
+	 */
 	private String handlePostRequest(HttpExchange httpExchange) {
 		
-		System.out.println("Recibida URI tipo POST: " + httpExchange.getRequestBody().toString());
+		System.out.println("Received URI type POST: " + httpExchange.getRequestBody().toString());
 		InputStream is = httpExchange.getRequestBody();
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
@@ -195,9 +237,16 @@ public class GestorHTTP implements HttpHandler {
 	
 	//INICIO BLOQUE RESPONSE
 	
+	/** 
+	 * @param httpExchange
+	 * @param requestParamValue
+	 * @throws IOException
+	 * If Result is True, we will process what kind of response will receive the Arduino. 
+	 * If Result is False, we will make the Api of the Type of petition avaliable.
+	 */
 	private void handleGetResponse(HttpExchange httpExchange, String requestParamValue)  throws  IOException {
 		
-		System.out.println("El servidor pasa a procesar la peticion GET: " + requestParamValue);
+		System.out.println("The server will process the petition GET: " + requestParamValue);
 		
 		System.out.println("OK");
 	
@@ -214,7 +263,7 @@ public class GestorHTTP implements HttpHandler {
 			}
 			if (opcion == 9 || opcion == 10) {
 				respuestaArduino = bf.readLine();
-				System.out.println("-->Respuesta Arduino: "+respuestaArduino+"\n-->Codigo Instruccion: "+opcion);
+				System.out.println("-->Arduino Response: "+respuestaArduino+"\n-->Instruction Code: "+opcion);
 				
 				if (opcion ==9) {
 					String timeStomp = new SimpleDateFormat("HH:mm").format(new java.util.Date());
@@ -224,7 +273,7 @@ public class GestorHTTP implements HttpHandler {
 							.append("register", timeStomp)
 							.append("user", "roberto");
 					light.insertOne(insercion);
-					System.out.println("Luz: "+respuestaArduino);
+					System.out.println("Light: "+respuestaArduino);
 				}
 				
 				else if (opcion == 10) {
@@ -235,14 +284,12 @@ public class GestorHTTP implements HttpHandler {
 							.append("register", timeStomp)
 							.append("user", "roberto");
 					temperature.insertOne(insercion);
-					System.out.println("Temperatura: "+respuestaArduino);
+					System.out.println("Temperature: "+respuestaArduino);
 				}
 			}
 			
 			
 			else if (opcion == 11) {
-				
-				System.out.println("Hola");
 				
 				ArrayList<String> valores = new ArrayList<String>();
 				
@@ -287,28 +334,19 @@ public class GestorHTTP implements HttpHandler {
 			}
 		}
         
-        //TODO: en vez del string htmlResponse anterior con la pagina web simple, se podria incluir 
-        // en dicho string cualquier otro string (tipo JSON, por ejemplo) que el cliente haya solicitado
-        // a traves de la peticion Axios de Javascript. Por tanto, podria ser necesario llamar desde este
-        // este metodo a lo/s metodo/s necesario/s para acceder a una base de datos como las que hemos
-        // trabajado en el modulo de Acceso a Datos.
-        
-        //NOTA: se puede incluir tambien un punto de control antes de enviar el codigo resultado de la
-        // operacion en el header (httpExchange.sendResponseHeaders(CODIGOHTTP, {})). Por ejemplo, si
-        // hay un error se enviarian codigos del tipo 400, 401, 403, 404, etc.
-        // https://developer.mozilla.org/es/docs/Web/HTTP/Status
-        
 	}
+	
+	/**
+	 * 
+	 * @param httpExchange
+	 * @param requestParamValue
+	 * @throws IOException
+	 * Recived data from the React App is processed in a POST petition
+	 * and then sended to the MongoDB Database.
+	 */
 	private void handlePostResponse(HttpExchange httpExchange, String requestParamValue) throws IOException{
 
 		System.out.println("POST: " + requestParamValue);
-		
-		//httpExchange.sendResponseHeaders(204, -1);
-
-		// TODO: a partir de aqui todas las operaciones que se quieran programar en el
-		// servidor cuando recibe
-		// una peticion POST (ejemplo: insertar en una base de datos lo que nos envia el
-		// cliente en requestParamValue)
 		
 		String userNew = requestParamValue.split(";")[0];
 		String passNew = requestParamValue.split(";")[1];
@@ -324,11 +362,11 @@ public class GestorHTTP implements HttpHandler {
 			while (bf.readLine() != "") {
 				String nuevoValor = bf.readLine();
 				valores.add(nuevoValor);
-				System.out.println("Ultimo registro: "+ nuevoValor+"\nCantidad de registros: "+valores.size());
+				System.out.println("Last register: "+ nuevoValor+"\nQuantity of Registers: "+valores.size());
 				
 				String lux = nuevoValor.split(";")[0];
 				String temp = nuevoValor.split(";")[1];
-				System.out.println("Insercion bucle "+nuevoValor);
+				System.out.println("Loop Insertion "+nuevoValor);
 				
 				String timeStompL = new SimpleDateFormat("HH:mm").format(new java.util.Date());
 				String dateStompL = new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
@@ -382,6 +420,12 @@ public class GestorHTTP implements HttpHandler {
 		
 	}
 	
+	/**
+	 * 
+	 * @param data
+	 * @return jsonArchive
+	 * In orther to make the data accesible, we will build a Json string depending the type of the data.
+	 */
 	private String buildJsonResponse(String[] data) {
 		switch (data[0]) {
 		case "users":
