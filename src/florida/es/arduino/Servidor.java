@@ -23,46 +23,60 @@ public class Servidor {
 	static Socket cliente = null;
 
 	public static void main(String[] args) throws IOException {
-
+		
 		try {
 
 			try {
+				/*
+				 * @param ServerSocket
+				 * Starts the client-server connection
+				 */
+				System.out.println("Awaiting for Client to connect...");
 				socketEscucha = new ServerSocket(5001);
 				cliente = socketEscucha.accept();
-				System.out.println("Cliente arduino conectado");
+				System.out.println("Arduino Client connected");
 
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			
+			/*
+			 * @param String
+			 * @param File
+			 * @param FileReader
+			 * @param BufferReader
+			 * @param Integer
+			 * Reads the config.txt archive.
+			 * */
 			String rutaFicheroConfiguracion = "config.txt";
 			File ficheroConfiguracion = new File(rutaFicheroConfiguracion);
 			FileReader fr = new FileReader(ficheroConfiguracion);
 			BufferedReader br = new BufferedReader(fr);
-			
-			//LECTURA CONFIG
-			
+	
 			String host = br.readLine().split("=")[1];
 			int puerto = Integer.parseInt(br.readLine().split("=")[1]);
 			String contexto = br.readLine().split("=")[1];
 			int backlog = Integer.parseInt(br.readLine().split("=")[1]);
 			int numHilos = Integer.parseInt(br.readLine().split("=")[1]);
-			int intervalo = Integer.parseInt(br.readLine().split("=")[1]);
 			
 			System.out.println("IP: " + host);
-			System.out.println("Puerto TCP: " + puerto);
+			System.out.println("TCP Port: " + puerto);
+			
+			/*
+			 * @param InetSocketAddress
+			 * @param HttpServer
+			 * @param ThreadPoolExecutor
+			 * Launch the Server
+			 * */
 			InetSocketAddress direccionTCPIP = new InetSocketAddress(host, puerto);
 			HttpServer servidor = HttpServer.create(direccionTCPIP, backlog);
-			
-			
 			GestorHTTP gestorHTTP = new GestorHTTP(cliente);
 			servidor.createContext(contexto, gestorHTTP);
 			
 			ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(numHilos);
 			servidor.setExecutor(threadPoolExecutor);
 			servidor.start();
-			System.out.println("Servidor HTTP arranca en el puerto " + puerto);
+			System.out.println("HTTP Server launched on Port " + puerto);
 
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -26,18 +26,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 public class GestorHTTP implements HttpHandler { 
 	
-	//PETICIONES: http://localhost:5000/test?codigo=1 (1-10)
-	// 1 - apagar
-	// 2 - encender
-	// 3 - abrir puerta (servo a 0)
-	// 4 - cerrar puerta (servo a 180)
-	// 5 - Luz Azul
-	// 6 - Luz Amarilla
-	// 7 - Luz Naranja
-	// 8 - Luz Roja
-	// 9 - leer luz
-	// 10 - leer temperatura
-	
 	static MongoClient mongoClient = null;
 	static MongoDatabase database = null;
 	static MongoCollection<Document> users = null;
@@ -103,7 +91,7 @@ public class GestorHTTP implements HttpHandler {
 			return;
 		}
 		
-		System.out.print("Peticion recibida: Tipo ");
+		System.out.print("Received petition: Type ");
 		String requestParamValue=null; 
 		if("GET".equalsIgnoreCase(httpExchange.getRequestMethod())) { 
 			System.out.println("GET");
@@ -124,7 +112,7 @@ public class GestorHTTP implements HttpHandler {
 	
 	
 	private String handleGetRequest(HttpExchange httpExchange) {
-		System.out.println("Recibida URI tipo GET: " + httpExchange.getRequestURI().toString().split("=")[1]);
+		System.out.println("Received URI type GET: " + httpExchange.getRequestURI().toString().split("=")[1]);
 		try {
 			Integer.parseInt(httpExchange.getRequestURI().toString().split("=")[1]);
 			resultado = true;
@@ -171,7 +159,7 @@ public class GestorHTTP implements HttpHandler {
 	
 	private String handlePostRequest(HttpExchange httpExchange) {
 		
-		System.out.println("Recibida URI tipo POST: " + httpExchange.getRequestBody().toString());
+		System.out.println("Recieved URI type POST: " + httpExchange.getRequestBody().toString());
 		InputStream is = httpExchange.getRequestBody();
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
@@ -214,7 +202,7 @@ public class GestorHTTP implements HttpHandler {
 			}
 			if (opcion == 9 || opcion == 10) {
 				respuestaArduino = bf.readLine();
-				System.out.println("-->Respuesta Arduino: "+respuestaArduino+"\n-->Codigo Instruccion: "+opcion);
+				System.out.println("-->Arduino Response: "+respuestaArduino+"\n-->Instruction Code: "+opcion);
 				
 				if (opcion ==9) {
 					String timeStomp = new SimpleDateFormat("HH:mm").format(new java.util.Date());
@@ -242,18 +230,16 @@ public class GestorHTTP implements HttpHandler {
 			
 			else if (opcion == 11) {
 				
-				System.out.println("Hola");
-				
 				ArrayList<String> valores = new ArrayList<String>();
 				
 				while (bf.readLine() != "") {
 					String nuevoValor = bf.readLine();
 					valores.add(nuevoValor);
-					System.out.println("Ultimo registro: "+ nuevoValor+"\nCantidad de registros: "+valores.size());
+					System.out.println("Last register: "+ nuevoValor+"\nAmount of registers: "+valores.size());
 					
 					String lux = nuevoValor.split(";")[0];
 					String temp = nuevoValor.split(";")[1];
-					System.out.println("Insercion bucle "+nuevoValor);
+					System.out.println("Loop insertion "+nuevoValor);
 					
 					String timeStompL = new SimpleDateFormat("HH:mm").format(new java.util.Date());
 					String dateStompL = new SimpleDateFormat("dd-MM-yyyy").format(new java.util.Date());
